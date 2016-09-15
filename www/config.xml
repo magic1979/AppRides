@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<widget xmlns = "http://www.w3.org/ns/widgets"
 		xmlns:gap = "http://phonegap.com/ns/1.0"
-		id        = "it.app-piu.purplemiles"
-		versionCode="2.0"
-		version   = "2.0">
-		<name>PurpleMiles</name>
-		<description>Purplemiles, Passaggi</description>
-		<author href="http://purplemiles.com" email="demo@purplemiles.com">
-			MondoWeb srl
+		id        = "it.rides.com"
+		versionCode="1.0"
+		version   = "1.0">
+		<name>Rides</name>
+		<description>Rides</description>
+		<author href="http://Rides.com" email="demo@Rides.com">
+			Rides srl
 		</author>
 		<preference name="phonegap-version" value="cli-6.3.0" />
 		<preference name="orientation" value="portrait" />
@@ -36,7 +36,7 @@
 		<preference name="SplashScreen" value="splash" />
 		<preference name="SplashScreenDelay" value="10000" />
 		<preference name="SplashMaintainAspectRatio" value="false" />
-		<preference name="ErrorUrl" value="http://www.purplemiles.com"/>
+		<preference name="ErrorUrl" value="http://www.rides.com"/>
 		<preference name="BackgroundColor" value="#edebe7"/>
 		<preference name="KeepRunning" value="true"/>
 		<preference name="DisallowOverscroll" value="true"/> 
