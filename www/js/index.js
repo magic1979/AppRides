@@ -1567,6 +1567,7 @@ function onError56(error) {
 
 function startgps(){
 	//ATTIVARE
+	
 	var watchID1 = navigator.geolocation.getCurrentPosition(onSuccess55, onError55, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	
 	//var lat = "41.770447";  //  "41.783780"  "41.783780" localStorage.getItem("lat")
@@ -3647,8 +3648,10 @@ function vediofferte(){
 			
 			$(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_pass +"", function(e){
 						   
-				//window.open("maps:daddr="+ item.partenza +"" , '_system');
-				window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+				var cordinate = item.lat+","+item.lng;
+						   
+				//window.open("maps:daddr="+ cordinate +"" , '_system');
+				window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 						   
 				e.stopImmediatePropagation();
 					
@@ -3691,6 +3694,8 @@ function vediofferte(){
 			
 			
 			$(document).on("touchstart", "#telefona"+ item.id_richiesta +"_"+ item.id_pass + "", function(e){
+				
+						   
 				window.location.href = "tel:+39"+item.cell+"";
 						   
 				if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
@@ -3822,16 +3827,17 @@ function vediofferte44(){
 				   //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
 				   
 				   $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
+						
+						var cordinate = item.lat+","+item.lng;
 								  
+						//window.open("maps:daddr="+ item.partenza +"" , '_system');
+						window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 								  
-								  //window.open("maps:daddr="+ item.partenza +"" , '_system');
-								  window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+						e.stopImmediatePropagation();
 								  
-								  e.stopImmediatePropagation();
+						e.preventDefault();
 								  
-								  e.preventDefault();
-								  
-								  return false;
+						return false;
 								  
 					});
 				   
@@ -3910,8 +3916,10 @@ function vediofferte44(){
 				   
 				   $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
 								  
-							//window.open("maps:daddr="+ item.partenza +"" , '_system');
-							window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+							var cordinate = item.lat+","+item.lng;
+								  
+							//window.open("maps:daddr="+ cordinate +"" , '_system');
+							window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 								  
 							e.stopImmediatePropagation();
 								  
@@ -4012,7 +4020,10 @@ function vediofferte44(){
 				  
 				  
 				  $(document).on("touchstart", "#telefona"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
+								 
 						window.location.href = "tel:+39"+item.cell+"";
+						//window.open('tel:12345678', '_system')
+								 
 								 
 						if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				  });
@@ -4169,7 +4180,7 @@ function vediofferte44(){
 				  }
 				  
 				  if(item.Token!=1){
-				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
 				  }
 				  
 				  });

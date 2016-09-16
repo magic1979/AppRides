@@ -11,7 +11,7 @@ function onDeviceReady() {
 		if(localStorage.getItem("pagina")=="log"){
 							   
 	        navigator.notification.confirm(
-	       'Vuoi chiudere purple miles?',  // message
+	       'Vuoi chiudere ?',  // message
 	        onConfirm2,              // callback to invoke with index of button pressed
 	       'Spegni',            // title
 	       'Spegni,Annulla'      // buttonLabels
