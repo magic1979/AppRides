@@ -381,7 +381,7 @@ function onDeviceReady() {
 	
 	$(document).on("tap", "#accedi1", function(e){
 				   
-		window.location.href = "#page1";
+		window.location.href = "#page";
 				   
 		e.stopImmediatePropagation();
 				   

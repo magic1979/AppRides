@@ -3645,9 +3645,10 @@ function vediofferte(){
 			
 			//<font color='#fff'>CHIAMA PASSEGGERO</font>
 			
-			$(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
+			$(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_pass +"", function(e){
 						   
-				window.open("maps:daddr="+ item.partenza +"" , '_system');
+				//window.open("maps:daddr="+ item.partenza +"" , '_system');
+				window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
 						   
 				e.stopImmediatePropagation();
 					
@@ -3823,7 +3824,8 @@ function vediofferte44(){
 				   $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
 								  
 								  
-								  window.open("maps:daddr="+ item.partenza +"" , '_system');
+								  //window.open("maps:daddr="+ item.partenza +"" , '_system');
+								  window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
 								  
 								  e.stopImmediatePropagation();
 								  
@@ -3908,7 +3910,8 @@ function vediofferte44(){
 				   
 				   $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
 								  
-							window.open("maps:daddr="+ item.partenza +"" , '_system');
+							//window.open("maps:daddr="+ item.partenza +"" , '_system');
+							window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
 								  
 							e.stopImmediatePropagation();
 								  
