@@ -24,6 +24,7 @@ receivedEvent: function(id) {
 	
 	window.plugins.insomnia.keepAwake();
 	
+	
 	//navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	//navigator.geolocation.watchPosition(gpsonSuccess, gpsonError, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
 	
@@ -59,28 +60,36 @@ receivedEvent: function(id) {
 		
 	}
 	
+	
 	var lat = localStorage.getItem("lat");
 	var lng = localStorage.getItem("lng");
 	
-	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+		
+	setTimeout (function(){
+		$("#footer").fadeIn();
+	}, 1200);
 	
 	
-	var connectionStatus = false;
-	connectionStatus = navigator.onLine ? 'online' : 'offline';
+	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
 	
-	if(connectionStatus=='online'){
-		$('#noconn').hide();
+	
+	$("#offerte44").html("");
+	$(".spinner").show();
+	vediofferte44()
+			
+	
+	setTimeout(function() {
+	  startgps();
+	}, 1000);
+	
+	
+	//var connectionStatus = false;
+	//connectionStatus = navigator.onLine ? 'online' : 'offline';
+	
+	//if(connectionStatus=='online'){
 		
 		localStorage.setItem("risppass44", "")
-		localStorage.setItem("chatpass", "")
-		
-		$("#imgutente").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-		$("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-		
-		startgps();
-		
-		//var lat = localStorage.getItem("lat");
-		//var lng = localStorage.getItem("lng");
+		localStorage.setItem("chatpass", "")		 
 		
 		//var lat = "41.783780";   //  "41.783780" localStorage.getItem("lat")   "41.8786716"
 		//var lng = "12.364947";   //  "12.364947" localStorage.getItem("lng")  "12.4790831"
@@ -119,11 +128,6 @@ receivedEvent: function(id) {
 		
 		localStorage.setItem("scroller","0");
 		
-		
-		$(".spinner").show();
-		$("#offerte44").html("");
-		vediofferte44()
-		
         
 		/*refreshPos = setInterval(function() {
 			controllaofferte()
@@ -141,9 +145,9 @@ receivedEvent: function(id) {
 		
 		google.maps.event.addDomListener(window, 'load', initialize);*/
 		
-	}
+	//}
 	
-	else{
+	/*else{
 		navigator.notification.alert(
 										'Possibile errore di rete, riprova tra qualche minuto.',  // message
 										alertDismissed,         // callback
@@ -155,27 +159,9 @@ receivedEvent: function(id) {
 		window.location.href = "Login.html";
 		
 		
-	}
+	}*/
 
-	
-	
-	//localStorage.setItem("lat", "41.889191")
-	//localStorage.setItem("lng", "12.492475")
-	
-	
-	var altezzatbl = getRealContentHeight()-80;
-	var height = getRealContentHeight()-80;
-	$("#tblhome").attr("height",height);
-	$("#tblhome3").attr("height",height);
-	
-	
-	
-	if (localStorage.getItem("veicolo") === null || localStorage.getItem("veicolo")=="null" || typeof(localStorage.getItem("veicolo")) == 'undefined' || localStorage.getItem("veicolo")==0 || localStorage.getItem("veicolo")=="") {
-		
-		localStorage.setItem("veicolo", "6");
-		
-	}
-	
+
 	
 	IDPage = getParameterByName('id');
 	ODPage = getParameterByName('od');
@@ -196,17 +182,7 @@ receivedEvent: function(id) {
 	$("#nickhome3").html(localStorage.getItem("nick"));
 	
 	
-	setTimeout(function() {
-	  $("#tblhome").fadeIn(1500)
-	}, 500);
-	
-	
-	
-	//STELLE
-	
 
-	
-	
 	isTabHolded=false;
 	
 
@@ -264,9 +240,7 @@ receivedEvent: function(id) {
 	
 	var myScroll;
 	
-	setTimeout (function(){
-		$("#footer").fadeIn();
-	}, 500);
+
 	
 	
 	$(document).on("tap", "#altro", function(e){
@@ -276,105 +250,18 @@ receivedEvent: function(id) {
 	});
 	
 	
-	// PER FOTOCAMERA //
+	// PER FOTOCAMERA
 	
-	$(document).on("tap", "#prendifoto", function(e){
+	/*$(document).on("tap", "#prendifoto", function(e){
 				   
-		navigator.camera.getPicture(uploadPhoto, onFail, { quality: 50,
-		destinationType: Camera.DestinationType.FILE_URI,
-		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-		targetWidth: 200,
-		targetHeight: 200
-		});
-	});
-	
-	$(document).on("tap", "#scattafoto", function(e){
+		window.location.href = "index_old.html";
 				   
-				   navigator.camera.getPicture(Successo, onFail, { quality: 30,
-											   destinationType: Camera.DestinationType.DATA_URL,
-											   encodingType: Camera.EncodingType.PNG,
-											   targetWidth: 200,
-											   targetHeight: 200
-											   });
-	});
+		e.stopImmediatePropagation();
+				   
+		e.preventDefault();
+				   
+	});*/
 	
-	
-	function Successo(imageData) {
-		
-		localStorage.setItem("Foto1", "data:image/png;base64," + imageData);
-		
-		var image000 = document.getElementById('imgfoto');
-		image000.src = localStorage.getItem("Foto1");
-		
-		//salvafoto("Sridesv2")
-		
-	}
-	
-	
-	function onFail(message) {
-		navigator.notification.alert(
-									 'Nessuna foto archiviata',  // message
-									 alertDismissed,         // callback
-									 'Foto',            // title
-									 'OK'                  // buttonName
-									 );
-	}
-	
-	function onPhotoURISuccess(imageURI) {
-		// Uncomment to view the image file URI
-		// console.log(imageURI);
-		// Get image handle
-		//
-		var largeImage = document.getElementById('imgfoto');
-		// Unhide image elements
-		//
-		largeImage.style.display = 'block';
-		// Show the captured photo
-		// The inline CSS rules are used to resize the image
-		//
-		largeImage.src = imageURI;
-	}
-	
-	function uploadPhoto(imageURI) {
-		var largeImage = document.getElementById('imgfoto');
-		// Unhide image elements
-		//
-		largeImage.style.display = 'block';
-		// Show the captured photo
-		// The inline CSS rules are used to resize the image
-		//
-		largeImage.src = imageURI;
-		
-		
-		var options = new FileUploadOptions();
-		options.fileKey="file";
-		
-		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-		options.mimeType="image/jpeg";
-		
-		var params = {};
-		params.value1 = localStorage.getItem("nomefoto");
-		params.value2 = "param";
-		
-		options.params = params;
-		
-		var ft = new FileTransfer();
-		ft.upload(imageURI, encodeURI("http://msop.it/uploadrides.php"), win, fail, options);
-	}
-	
-	function win(r) {
-		console.log("Code = " + r.responseCode);
-		console.log("Response = " + r.response);
-		console.log("Sent = " + r.bytesSent);
-		//alert(r.response);
-		
-	}
-	
-	function fail(error) {
-		alert("An error has occurred: Code = " + error.code);
-	}
-
-	/// FINE FOTOCAMERA ///
 	
 	
 	
@@ -814,16 +701,6 @@ receivedEvent: function(id) {
 
 	$(document).on("touchstart", "#impostazioni", function(e){
 		$.mobile.changePage( "#home3", { transition: "slide", changeHash: false });
-				   
-				   var connectionStatus = false;
-				   connectionStatus = navigator.onLine ? 'online' : 'offline';
-				   
-				   if(connectionStatus=='online'){
-				   
-				      $("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-
-				   }
-
 				   
                    $("#spinner3").show();
 				   $.ajax({
@@ -1315,19 +1192,10 @@ receivedEvent: function(id) {
                    
                    localStorage.setItem("patente", document.getElementById("patente").value);
 				   
-				   if (localStorage.getItem("nomefoto") === null || localStorage.getItem("nomefoto")=="null" || typeof(localStorage.getItem("nomefoto")) == 'undefined' || localStorage.getItem("nomefoto")==0 || localStorage.getItem("nomefoto")=="") {
-				   
-				       nomefoto = "default.png";
-				   
-				   }
-				   else{
-					  nomefoto = localStorage.getItem("nomefoto")+".jpg";
-				   }
-				   
 				   
 				   $.ajax({
 						  type:"GET",
-						  url:"http://msop.it/rides/check_impostazioni.php?id_autista="+ localStorage.getItem("id_autista") +"&veicolo="+ document.getElementById("veicolo").value +"&fumatori="+ fumatori +"&animali="+ animali +"&cell="+ document.getElementById("cell").value +"&patente="+ document.getElementById("patente").value +"&patentemese="+ document.getElementById("patentemese").value +"&patenteanno="+ document.getElementById("patenteanno").value +"&nome="+ document.getElementById("nome").value +"&cognome="+ document.getElementById("cognome").value +"&anno_nascita="+ document.getElementById("anno_nascita").value +"&foto="+ nomefoto +"",
+						  url:"http://msop.it/rides/check_impostazioni.php?id_autista="+ localStorage.getItem("id_autista") +"&veicolo="+ document.getElementById("veicolo").value +"&fumatori="+ fumatori +"&animali="+ animali +"&cell="+ document.getElementById("cell").value +"&patente="+ document.getElementById("patente").value +"&patentemese="+ document.getElementById("patentemese").value +"&patenteanno="+ document.getElementById("patenteanno").value +"&nome="+ document.getElementById("nome").value +"&cognome="+ document.getElementById("cognome").value +"&anno_nascita="+ document.getElementById("anno_nascita").value +"",
 						  contentType: "application/json",
 						  //data: {ID: "Lazio"}, LIMIT 10
 						  timeout: 7000,
@@ -1338,8 +1206,6 @@ receivedEvent: function(id) {
 						  $.each(result, function(i,item){
 								 
 								 if(item.Token==1){
-								 
-								 localStorage.setItem("fotoprof", localStorage.getItem("nomefoto"));
 								 
 								  navigator.notification.alert(
 															  'Modifica eseguita.',  // message
@@ -1520,7 +1386,7 @@ function gpsonError(){
 								 'Possibile errore GPS, assicurati di avere il gps del telefono attivato.',  // message
 								 alertDismissed,         // callback
 								 'Attenzione',           // title
-								 'Done'                  // buttonName
+								 'Ok'                  // buttonName
 								 );
 	
 	var lat = "41.889191";
@@ -1663,18 +1529,23 @@ function onSuccess55(position) {
 	localStorage.setItem("lat", lat)
 	localStorage.setItem("lng", lng)
 	
-	
-	//alert(lat)
-	
 }
 
 
 function onError55(error) {
 	//var watchID = navigator.geolocation.watchPosition(onSuccess2, onError3, { timeout: 80000 });
-	var watchID1 = navigator.geolocation.getCurrentPosition(onSuccess55, onError56, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
+	navigator.geolocation.getCurrentPosition(onSuccess55, onError56, {timeout: 30000, enableHighAccuracy: true, maximumAge: 90000 });
+	
 }
 
 function onError56(error) {
+	
+	navigator.notification.alert(
+								 'Possibile errore GPS, assicurati di avere il gps del telefono attivato.',  // message
+								 alertDismissed,         // callback
+								 'Attenzione',           // title
+								 'Done'                  // buttonName
+								 );
 	
 	window.location.href = "Login.html";
 }
@@ -1683,7 +1554,7 @@ function onError56(error) {
 function startgps(){
 	//ATTIVARE
 	
-	navigator.geolocation.watchPosition(onSuccess55, onError55, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
+	var watchID1 = navigator.geolocation.watchPosition(onSuccess55, onError55, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	
 	//var lat = "41.770447";  //  "41.783780"  "41.783780" localStorage.getItem("lat")
 	//var lng = "12.373529";  //  "12.364947"  "12.364947" localStorage.getItem("lng")
@@ -3765,8 +3636,8 @@ function vediofferte(){
 						   
 				var cordinate = item.lat+","+item.lng;
 						   
-				window.open("maps:daddr="+ cordinate +"" , '_system');
-				//window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+				//window.open("maps:daddr="+ cordinate +"" , '_system');
+				window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 						   
 				e.stopImmediatePropagation();
 					
@@ -3858,16 +3729,14 @@ function vediofferte(){
 function vediofferte44(){
 	
 	
+	
 	for(i=0; i<10000; i++)
 	{
 		window.clearInterval(i);
 	}
 	
 	
-	//alert("http://msop.it/rides/check_richiesta_passeggeroV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"")
 	
-	
-    //$("#spinner44").show();
 	$.ajax({
 		   type:"GET",
 		   url:"http://msop.it/rides/check_richiesta_passeggeroV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"",
@@ -3884,6 +3753,7 @@ function vediofferte44(){
 		      $("#spinner44").hide();
 		   }
 		   else{
+			   
 		     $("#offerte44").html("");
 		     $("#spinner44").hide();
 			 localStorage.setItem("scroller","0");
@@ -3945,8 +3815,8 @@ function vediofferte44(){
 						
 						var cordinate = item.lat+","+item.lng;
 								  
-						window.open("maps:daddr="+ item.partenza +"" , '_system');
-						//window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+						//window.open("maps:daddr="+ item.partenza +"" , '_system');
+						window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 								  
 						e.stopImmediatePropagation();
 								  
@@ -4033,8 +3903,8 @@ function vediofferte44(){
 								  
 							var cordinate = item.lat+","+item.lng;
 								  
-							window.open("maps:daddr="+ cordinate +"" , '_system');
-							//window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
+							//window.open("maps:daddr="+ cordinate +"" , '_system');
+							window.open("google.navigation:q="+ cordinate +"&mode=d" , '_system');
 								  
 							e.stopImmediatePropagation();
 								  
@@ -4295,7 +4165,7 @@ function vediofferte44(){
 				  }
 				  
 				  if(item.Token!=1){
-				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
 				  }
 				  
 				  });
@@ -4308,11 +4178,24 @@ function vediofferte44(){
 		   },
 		   error: function(){
 		   
-            	$("#spinner44").hide();
-				
-		    	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+		     /*navigator.notification.alert(
+										'Possibile errore di rete, riprova tra qualche minuto.',  // message
+										alertDismissed,         // callback
+										'Attenzione',           // title
+										'Done'                  // buttonName
+										);*/
+										
+										
+			 $("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+			 
+			 
+			 $("#spinner44").hide();
+			 
 		   
-		   	   vediofferte44();
+		   setTimeout (function(){ 
+		 		vediofferte44()
+     		}, 4000);
+		   
 		   
 		   },
 		   dataType:"jsonp"});
