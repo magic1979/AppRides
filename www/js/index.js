@@ -24,7 +24,6 @@ receivedEvent: function(id) {
 	
 	window.plugins.insomnia.keepAwake();
 	
-	StatusBar.hide();
 	
 	//navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	//navigator.geolocation.watchPosition(gpsonSuccess, gpsonError, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
@@ -3773,10 +3772,26 @@ function vediofferte44(){
 		   
 		   
 		   if(localStorage.getItem("risppass44")==JSON.stringify(result)){
+			   
+			  navigator.notification.alert(
+										'Uguale',  // message
+										alertDismissed,         // callback
+										'Uguale',           // title
+										'Done'                  // buttonName
+										);
+			   
 		      localStorage.setItem("scroller","1");
 		      $("#spinner44").hide();
 		   }
 		   else{
+			   
+			  navigator.notification.alert(
+										'Aggiorno.',  // message
+										alertDismissed,         // callback
+										'Aggiorno',           // title
+										'Done'                  // buttonName
+										);
+			   
 		     $("#offerte44").html("");
 		     $("#spinner44").hide();
 			 localStorage.setItem("scroller","0");
