@@ -2018,6 +2018,8 @@ function verificawifi(){
 function onResume() {
 	app.initialize();
 	
+	StatusBar.hide();
+	
 	/*var connectionStatus = false;
 	connectionStatus = navigator.onLine ? 'online' : 'offline';
 	
