@@ -3750,16 +3750,21 @@ function vediofferte(){
 function vediofferte44(){
 	
 	
+	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+			 
+	myScroll.refresh();
+			 
+	$("#spinner44").hide();
+	
+	
+	
 	for(i=0; i<10000; i++)
 	{
 		window.clearInterval(i);
 	}
 	
 	
-	//alert("http://msop.it/rides/check_richiesta_passeggeroV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"")
 	
-	
-    //$("#spinner44").show();
 	$.ajax({
 		   type:"GET",
 		   url:"http://msop.it/rides/check_richiesta_passeggeroV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"",
@@ -3772,25 +3777,10 @@ function vediofferte44(){
 		   
 		   
 		   if(localStorage.getItem("risppass44")==JSON.stringify(result)){
-			   
-			  navigator.notification.alert(
-										'Uguale',  // message
-										alertDismissed,         // callback
-										'Uguale',           // title
-										'Done'                  // buttonName
-										);
-			   
 		      localStorage.setItem("scroller","1");
 		      $("#spinner44").hide();
 		   }
 		   else{
-			   
-			  navigator.notification.alert(
-										'Aggiorno.',  // message
-										alertDismissed,         // callback
-										'Aggiorno',           // title
-										'Done'                  // buttonName
-										);
 			   
 		     $("#offerte44").html("");
 		     $("#spinner44").hide();
