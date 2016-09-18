@@ -147,7 +147,7 @@ receivedEvent: function(id) {
 										);
 		
 		
-		//window.location.href = "index.html";
+		window.location.href = "Login.html";
 		
 		
 	}
@@ -1407,7 +1407,7 @@ function gpsonError(){
 								 'Possibile errore GPS, assicurati di avere il gps del telefono attivato.',  // message
 								 alertDismissed,         // callback
 								 'Attenzione',           // title
-								 'Done'                  // buttonName
+								 'Ok'                  // buttonName
 								 );
 	
 	var lat = "41.889191";
@@ -1562,8 +1562,14 @@ function onError55(error) {
 }
 
 function onError56(error) {
+	navigator.notification.alert(
+								 'Possibile errore GPS, assicurati di avere il gps del telefono attivato.',  // message
+								 alertDismissed,         // callback
+								 'Attenzione',           // title
+								 'Done'                  // buttonName
+								 );
 	
-	//window.location.href = "index.html";
+	window.location.href = "Login.html";
 }
 
 
