@@ -64,23 +64,33 @@ receivedEvent: function(id) {
 	var lat = localStorage.getItem("lat");
 	var lng = localStorage.getItem("lng");
 	
+			
+	$("#spinner44").show();
+		
+	setTimeout (function(){
+		$("#footer").fadeIn();
+	}, 500);
 	
-	startgps();
+	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
 	
 	
+	$("#offerte44").html("");
 	$(".spinner").show();
+	vediofferte44()
+			
+	
+	setTimeout(function() {
+	  startgps();
+	}, 1000);
+	
+	
 	//var connectionStatus = false;
 	//connectionStatus = navigator.onLine ? 'online' : 'offline';
 	
 	//if(connectionStatus=='online'){
-		$('#noconn').hide();
 		
 		localStorage.setItem("risppass44", "")
-		localStorage.setItem("chatpass", "")
-		
-										
-		$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
-			 
+		localStorage.setItem("chatpass", "")		 
 		
 		//var lat = "41.783780";   //  "41.783780" localStorage.getItem("lat")   "41.8786716"
 		//var lng = "12.364947";   //  "12.364947" localStorage.getItem("lng")  "12.4790831"
@@ -119,20 +129,6 @@ receivedEvent: function(id) {
 		
 		localStorage.setItem("scroller","0");
 		
-		
-		setTimeout(function() {
-			$("#offerte44").html("");
-			vediofferte44()
-			
-		}, 1000);
-		
-		
-		
-		$("#spinner44").show();
-		
-		setTimeout (function(){
-			$("#footer").fadeIn();
-		}, 500);
         
 		/*refreshPos = setInterval(function() {
 			controllaofferte()
@@ -1539,7 +1535,7 @@ function onSuccess55(position) {
 
 function onError55(error) {
 	//var watchID = navigator.geolocation.watchPosition(onSuccess2, onError3, { timeout: 80000 });
-	navigator.geolocation.getCurrentPosition(onSuccess55, onError56, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
+	navigator.geolocation.getCurrentPosition(onSuccess55, onError56, {timeout: 30000, enableHighAccuracy: true, maximumAge: 90000 });
 	
 }
 
