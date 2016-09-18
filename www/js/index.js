@@ -60,6 +60,7 @@ receivedEvent: function(id) {
 		
 	}
 	
+	
 	var lat = localStorage.getItem("lat");
 	var lng = localStorage.getItem("lng");
 	
@@ -68,23 +69,16 @@ receivedEvent: function(id) {
 	
 	
 	$(".spinner").show();
-	var connectionStatus = false;
-	connectionStatus = navigator.onLine ? 'online' : 'offline';
+	//var connectionStatus = false;
+	//connectionStatus = navigator.onLine ? 'online' : 'offline';
 	
-	if(connectionStatus=='online'){
+	//if(connectionStatus=='online'){
 		$('#noconn').hide();
 		
 		localStorage.setItem("risppass44", "")
 		localStorage.setItem("chatpass", "")
 		
-		navigator.notification.alert(
-										'Online.',  // message
-										alertDismissed,         // callback
-										'test',           // title
-										'Done'                  // buttonName
-										);
 										
-		
 		//var lat = localStorage.getItem("lat");
 		//var lng = localStorage.getItem("lng");
 		
@@ -128,9 +122,8 @@ receivedEvent: function(id) {
 		
 		setTimeout(function() {
 			
-			
-			
 			vediofferte44()
+			
 		}, 2000);
 		
 		
@@ -152,9 +145,9 @@ receivedEvent: function(id) {
 		
 		google.maps.event.addDomListener(window, 'load', initialize);*/
 		
-	}
+	//}
 	
-	else{
+	/*else{
 		navigator.notification.alert(
 										'Possibile errore di rete, riprova tra qualche minuto.',  // message
 										alertDismissed,         // callback
@@ -166,7 +159,7 @@ receivedEvent: function(id) {
 		window.location.href = "Login.html";
 		
 		
-	}
+	}*/
 
 	
 	
@@ -1566,22 +1559,13 @@ function onSuccess55(position) {
 	localStorage.setItem("lat", lat)
 	localStorage.setItem("lng", lng)
 	
-	
-	//alert(lat)
-	
 }
 
 
 function onError55(error) {
 	//var watchID = navigator.geolocation.watchPosition(onSuccess2, onError3, { timeout: 80000 });
-	navigator.geolocation.watchPosition(onSuccess55, onError56, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
+	navigator.geolocation.getCurrentPosition(onSuccess55, onError56, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
 	
-	navigator.notification.alert(
-										'gps2.',  // message
-										alertDismissed,         // callback
-										'test',           // title
-										'Done'                  // buttonName
-										);
 }
 
 function onError56(error) {
@@ -1600,14 +1584,7 @@ function onError56(error) {
 function startgps(){
 	//ATTIVARE
 	
-	navigator.notification.alert(
-										'gps.',  // message
-										alertDismissed,         // callback
-										'test',           // title
-										'Done'                  // buttonName
-										);
-	
-	var watchID1 = navigator.geolocation.getCurrentPosition(onSuccess55, onError55, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
+	var watchID1 = navigator.geolocation.watchPosition(onSuccess55, onError55, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	
 	//var lat = "41.770447";  //  "41.783780"  "41.783780" localStorage.getItem("lat")
 	//var lng = "12.373529";  //  "12.364947"  "12.364947" localStorage.getItem("lng")
