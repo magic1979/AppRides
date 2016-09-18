@@ -4201,15 +4201,25 @@ function vediofferte44(){
 		   },
 		   error: function(){
 		   
-            $("#spinner44").hide();
-		    /*navigator.notification.alert(
+		     /*navigator.notification.alert(
 										'Possibile errore di rete, riprova tra qualche minuto.',  // message
 										alertDismissed,         // callback
 										'Attenzione',           // title
 										'Done'                  // buttonName
 										);*/
+										
+										
+			 $("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+			 
+			 myScroll.refresh();
+			 
+			 $("#spinner44").hide();
+			 
 		   
-		   vediofferte44();
+		   setTimeout (function(){ 
+		 		vediofferte44()
+     		}, 1000);
+		   
 		   
 		   },
 		   dataType:"jsonp"});

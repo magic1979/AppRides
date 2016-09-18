@@ -7,7 +7,6 @@ function onDeviceReady() {
 		FastClick.attach(document.body);
 	}, false);
 	
-	StatusBar.hide();
 	
 	var destination;
 	
