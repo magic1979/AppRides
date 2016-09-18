@@ -79,8 +79,8 @@ receivedEvent: function(id) {
 		localStorage.setItem("chatpass", "")
 		
 										
-		//var lat = localStorage.getItem("lat");
-		//var lng = localStorage.getItem("lng");
+		$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
+			 
 		
 		//var lat = "41.783780";   //  "41.783780" localStorage.getItem("lat")   "41.8786716"
 		//var lng = "12.364947";   //  "12.364947" localStorage.getItem("lng")  "12.4790831"
@@ -121,13 +121,18 @@ receivedEvent: function(id) {
 		
 		
 		setTimeout(function() {
-			
+			$("#offerte44").html("");
 			vediofferte44()
 			
 		}, 1000);
 		
 		
+		
 		$("#spinner44").show();
+		
+		setTimeout (function(){
+			$("#footer").fadeIn();
+		}, 500);
         
 		/*refreshPos = setInterval(function() {
 			controllaofferte()
@@ -161,25 +166,7 @@ receivedEvent: function(id) {
 		
 	}*/
 
-	
-	
-	//localStorage.setItem("lat", "41.889191")
-	//localStorage.setItem("lng", "12.492475")
-	
-	
-	var altezzatbl = getRealContentHeight()-80;
-	var height = getRealContentHeight()-80;
-	$("#tblhome").attr("height",height);
-	$("#tblhome3").attr("height",height);
-	
-	
-	
-	if (localStorage.getItem("veicolo") === null || localStorage.getItem("veicolo")=="null" || typeof(localStorage.getItem("veicolo")) == 'undefined' || localStorage.getItem("veicolo")==0 || localStorage.getItem("veicolo")=="") {
-		
-		localStorage.setItem("veicolo", "6");
-		
-	}
-	
+
 	
 	IDPage = getParameterByName('id');
 	ODPage = getParameterByName('od');
@@ -200,17 +187,7 @@ receivedEvent: function(id) {
 	$("#nickhome3").html(localStorage.getItem("nick"));
 	
 	
-	setTimeout(function() {
-	  $("#tblhome").fadeIn(1500)
-	}, 500);
-	
-	
-	
-	//STELLE
-	
 
-	
-	
 	isTabHolded=false;
 	
 
@@ -268,9 +245,7 @@ receivedEvent: function(id) {
 	
 	var myScroll;
 	
-	setTimeout (function(){
-		$("#footer").fadeIn();
-	}, 500);
+
 	
 	
 	$(document).on("tap", "#altro", function(e){
