@@ -24,6 +24,8 @@ receivedEvent: function(id) {
 	
 	window.plugins.insomnia.keepAwake();
 	
+	StatusBar.hide();
+	
 	//navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	//navigator.geolocation.watchPosition(gpsonSuccess, gpsonError, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
 	

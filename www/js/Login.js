@@ -6,6 +6,8 @@ function onDeviceReady() {
 	
 	localStorage.setItem("pagina","log")
 	
+	StatusBar.hide();
+	
      document.addEventListener('backbutton', function(e) {
 							   
 		if(localStorage.getItem("pagina")=="log"){
