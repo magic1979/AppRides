@@ -124,7 +124,7 @@ receivedEvent: function(id) {
 			
 			vediofferte44()
 			
-		}, 2000);
+		}, 1000);
 		
 		
 		$("#spinner44").show();
