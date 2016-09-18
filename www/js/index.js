@@ -65,9 +65,9 @@ receivedEvent: function(id) {
 	var lng = localStorage.getItem("lng");
 	
 		
-	setTimeout (function(){
-		$("#footer").fadeIn();
-	}, 1200);
+	//setTimeout (function(){
+		//$("#footer").fadeIn();
+	//}, 1200);
 	
 	
 	$("#offerte44").html("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#000'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
