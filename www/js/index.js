@@ -27,16 +27,9 @@ receivedEvent: function(id) {
 	
 	//////// PUSH NUOVE //////
 	
-	var pushNotification;
-	var token
-
-
 	var push = PushNotification.init({
     android: {
         senderID: "12250132047"
-    },
-    browser: {
-        pushServiceURL: 'http://push.api.phonegap.com/v1/push'
     },
     ios: {
         alert: "true",
