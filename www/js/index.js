@@ -34,7 +34,7 @@ receivedEvent: function(id) {
 	
 	// PUSH NOTIFICATION //
 	
-	window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
+	//window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
 	
 	
 	/*if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
