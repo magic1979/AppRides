@@ -347,7 +347,7 @@ receivedEvent: function(id) {
 	
 	function onFail(message) {
 		navigator.notification.alert(
-									 message,  // message
+									 'errore riprova in seguito',  // message
 									 alertDismissed,         // callback
 									 'Foto',            // title
 									 'OK'                  // buttonName
