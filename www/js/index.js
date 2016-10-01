@@ -34,7 +34,7 @@ receivedEvent: function(id) {
 	
 	// PUSH NOTIFICATION //
 	
-	/*window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
+	window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
 	
 	window.plugins.PushbotsPlugin.resetBadge();
 	
@@ -59,7 +59,7 @@ receivedEvent: function(id) {
 		});
 			   
 	}, 1500);
-	}*/
+	}
 	
 	
 	//------------//
@@ -353,7 +353,7 @@ receivedEvent: function(id) {
 	
 	function onFail(message) {
 		navigator.notification.alert(
-									 'Nessuna foto archiviata',  // message
+									 message,  // message
 									 alertDismissed,         // callback
 									 'Foto',            // title
 									 'OK'                  // buttonName
@@ -6388,7 +6388,7 @@ function chiudi22(id) {
 
 
 
-/*function regToken() {
+function regToken() {
 	
 	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
 		
@@ -6426,7 +6426,7 @@ function chiudi22(id) {
 			   },
 			   dataType:"json"});
 	}
-}*/
+}
 
 
 
