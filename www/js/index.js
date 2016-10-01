@@ -76,7 +76,7 @@ receivedEvent: function(id) {
 		$.ajax({
 			   type:"GET",
 			   url:"http://www.msop.it/rides/Check_RegToken.asp",
-			   data: {email:localStorage.getItem("email"),token:testo,platform:"ios"},
+			   data: {email:localStorage.getItem("email"),token:testo,platform:"android"},
 			   contentType: "application/json",
 			   json: 'callback',
 			   timeout: 7000,
@@ -417,7 +417,7 @@ receivedEvent: function(id) {
 				   
 		navigator.camera.getPicture(uploadPhoto, onFail, { quality: 50,
 		destinationType: Camera.DestinationType.FILE_URI,
-		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+		sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
 		targetWidth: 200,
 		targetHeight: 200
 		});
@@ -506,7 +506,7 @@ receivedEvent: function(id) {
 	}
 	
 	function fail(error) {
-		alert("An error has occurred: Code = " + error.code);
+		alert("An error has occurred: Code = " + error);
 	}
 
 	/// FINE FOTOCAMERA ///
