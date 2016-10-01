@@ -48,7 +48,8 @@ receivedEvent: function(id) {
 	
 	push.on('registration', function(data) {
 		// data.registrationId
-		testa (data.registrationId)
+		var token = data.registrationId;
+		testa (token)
 	});
 	
 	push.on('notification', function(data) {
