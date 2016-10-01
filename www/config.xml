@@ -132,7 +132,7 @@
 		<plugin name="cordova-plugin-pushplugin" source="npm" />
 		<!--<preference name="android-build-tool" value="gradle" />
 		<plugin name="phonegap-plugin-push" spec="1.6.0" source="npm" >
-		<variable name="SENDER_ID" value="12250132047" />
+		<variable name="SENDER_ID" value="930697186929" />
 		</plugin>-->
 		<!--<gap:plugin name="pushbots-cordova-plugin" source="npm" />
 		<plugin name="com.phonegap.plugins.pushplugin" spec="2.5.0" source="pgb" />-->

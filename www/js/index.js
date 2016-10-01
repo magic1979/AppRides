@@ -44,7 +44,7 @@ receivedEvent: function(id) {
     successHandler,
     errorHandler,
     {
-        "senderID":"12250132047",
+        "senderID":"930697186929",
         "ecb":"onNotification"
     });	// required!
 	//}
@@ -94,7 +94,7 @@ receivedEvent: function(id) {
 		$.ajax({
 			   type:"GET",
 			   url:"http://www.msop.it/rides/Check_RegToken.asp",
-			   data: {email:localStorage.getItem("email"),token:testo,platform:"ios"},
+			   data: {email:localStorage.getItem("email"),token:testo,platform:"android"},
 			   contentType: "application/json",
 			   json: 'callback',
 			   timeout: 7000,
@@ -105,7 +105,7 @@ receivedEvent: function(id) {
 			   
 			     setTimeout (function(){
 					localStorage.setItem("Token", testo);
-					alert(testo);
+					//alert(testo);
 				}, 500);
 			   
 			   });
