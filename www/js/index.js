@@ -25,7 +25,7 @@ receivedEvent: function(id) {
 	window.plugins.insomnia.keepAwake();
 	
 
-	var push = PushNotification.init({
+	/*var push = PushNotification.init({
 		android: {
 			senderID: "12250132047"
 		},
@@ -55,7 +55,34 @@ receivedEvent: function(id) {
 	
 	push.on('error', function(e) {
 		// e.message
-	});
+	});*/
+	
+	window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
+	
+	window.plugins.PushbotsPlugin.resetBadge();
+	
+	
+	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
+	setTimeout(function() {
+			   
+		window.plugins.PushbotsPlugin.on("registered", function(token){
+			console.log(token);
+			//alert(token)
+		});
+			   
+		window.plugins.PushbotsPlugin.getRegistrationId(function(token){
+			 console.log("Registration Id:" + token);
+														
+														
+			  localStorage.setItem("Token", token);
+			  console.log(token);
+			  regToken()
+														
+			  alert("Registration Id:" + token)
+		});
+			   
+	}, 1500);
+	}
 	
 	
 	
@@ -6260,6 +6287,51 @@ function chiudi22(id) {
 		$("#blob").hide();
 }
 
+
+function regToken() {
+	
+	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
+		
+		return;
+	}
+	else
+	{
+		
+		$(".spinner").show();
+		$.ajax({
+			   type:"GET",
+			   url:"http://www.msop.it/rides/Check_RegToken.asp?email="+ localStorage.getItem("email") +"&token="+ localStorage.getItem("Token") +"&platform=android",
+			   //data: {token:localStorage.getItem("Token")},
+			   contentType: "application/json; charset=utf-8",
+			   json: 'callback',
+			   timeout: 7000,
+			   crossDomain: true,
+			   success:function(result){
+			   
+			   
+			     setTimeout (function(){
+					//checkpush()
+				 }, 500);
+			   
+			   },
+			   error: function(){
+			   
+			   
+			   $(".spinner").hide();
+			   
+			   
+			   /*navigator.notification.alert(
+				'Nessuna Connessione Internet, Riprova Tra Qualche Minuto',  // message
+				alertDismissed,         // callback
+				'Connessione Internet',            // title
+				'OK'                  // buttonName
+				);*/
+			   
+			   
+			   },
+			   dataType:"json"});
+	}
+}
 
 
 function getParameterByName(name) {
