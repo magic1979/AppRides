@@ -27,6 +27,110 @@ receivedEvent: function(id) {
 	
 	//////// PUSH NUOVE //////
 	
+	var pushNotification;
+	var token
+
+
+	var push = PushNotification.init({
+    android: {
+        senderID: "12250132047"
+    },
+    browser: {
+        pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+    },
+    ios: {
+        alert: "true",
+        badge: "true",
+        sound: "true"
+    },
+    windows: {}
+	});
+	
+	push.on('registration', function(data) {
+		// data.registrationId
+		testa (data.registrationId)
+	});
+	
+	push.on('notification', function(data) {
+		// data.message,
+		// data.title,
+		// data.count,
+		// data.sound,
+		// data.image,
+		// data.additionalData
+	});
+	
+	push.on('error', function(e) {
+		// e.message
+	});
+	
+	
+	function testa (testo) {
+		
+		
+		setTimeout (function(){
+					
+		//alert("http://www.msop.it/rides/Check_RegToken.asp?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios")
+		//?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios
+		
+		$.ajax({
+			   type:"GET",
+			   url:"http://www.msop.it/rides/Check_RegToken.asp",
+			   data: {email:localStorage.getItem("email"),token:testo,platform:"ios"},
+			   contentType: "application/json",
+			   json: 'callback',
+			   timeout: 7000,
+			   crossDomain: true,
+			   success:function(result){
+			   
+			   $.each(result, function(i,item){
+			   
+			     setTimeout (function(){
+					localStorage.setItem("Token", testo);
+					alert(testo);
+				}, 500);
+			   
+			   });
+			   
+			   },
+			   error: function(){
+			   
+					 alert("No")
+			   
+			   },
+			   dataType:"json"});
+					
+		}, 500);
+		
+		
+	}
+
+	
+	
+	
+	
+	//pushNotification.setApplicationIconBadgeNumber(successCallback, errorCallback, 0);
+	
+	//function successCallback(){}
+	//function errorCallback(){}
+	
+
+	/*if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
+		
+		setTimeout (function(){
+					
+			PushbotsPlugin.getToken(function(token){
+											
+				localStorage.setItem("Token", token);
+				console.log(token);
+				alert(token)
+				//regToken()
+											
+			});
+					
+		}, 1500);
+		
+	}*/
 	
 
 	/////////////////////////////////////
@@ -34,31 +138,28 @@ receivedEvent: function(id) {
 	
 	// PUSH NOTIFICATION //
 	
-	//window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
+	/*window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
+	
+	window.plugins.PushbotsPlugin.resetBadge();
 	
 	
-	/*if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
 	setTimeout(function() {
 			   
+		window.plugins.PushbotsPlugin.on("registered", function(token){
+			console.log(token);
+			alert(token)
+		});
 			   
 		window.plugins.PushbotsPlugin.getRegistrationId(function(token){
 			 console.log("Registration Id:" + token);
-														
-														
-			  localStorage.setItem("Token", token);
-			  console.log(token);
-			  regToken()
-														
-			  alert("Registration Id:" + token)
+			alert("Registration Id:" + token)
 		});
 			   
-	}, 1500);
-	}*/
-	
+	}, 1500);*/
 	
 	//------------//
 	
-	
+
 	
 	////////////////////////////////////////
 	
@@ -347,7 +448,7 @@ receivedEvent: function(id) {
 	
 	function onFail(message) {
 		navigator.notification.alert(
-									 'errore riprova in seguito',  // message
+									 'Nessuna foto archiviata',  // message
 									 alertDismissed,         // callback
 									 'Foto',            // title
 									 'OK'                  // buttonName
@@ -6381,8 +6482,7 @@ function chiudi22(id) {
 
 
 
-
-/*function regToken() {
+function regToken() {
 	
 	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
 		
@@ -6403,9 +6503,9 @@ function chiudi22(id) {
 			   success:function(result){
 			   
 			   
-			     setTimeout (function(){
-					//checkpush()
-				 }, 500);
+			   setTimeout (function(){
+						   //checkpush()
+						   }, 500);
 			   
 			   },
 			   error: function(){
@@ -6414,13 +6514,18 @@ function chiudi22(id) {
 			   $(".spinner").hide();
 			   
 			   
-
+			   /*navigator.notification.alert(
+				'Nessuna Connessione Internet, Riprova Tra Qualche Minuto',  // message
+				alertDismissed,         // callback
+				'Connessione Internet',            // title
+				'OK'                  // buttonName
+				);*/
 			   
 			   
 			   },
 			   dataType:"json"});
 	}
-}*/
+}
 
 
 

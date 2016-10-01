@@ -6,14 +6,12 @@ function onDeviceReady() {
 	
 	localStorage.setItem("pagina","log")
 	
-	StatusBar.hide();
-	
      document.addEventListener('backbutton', function(e) {
 							   
 		if(localStorage.getItem("pagina")=="log"){
 							   
 	        navigator.notification.confirm(
-	       'Vuoi chiudere ?',  // message
+	       'Vuoi chiudere purple miles?',  // message
 	        onConfirm2,              // callback to invoke with index of button pressed
 	       'Spegni',            // title
 	       'Spegni,Annulla'      // buttonLabels
@@ -892,8 +890,14 @@ function LoginVera(email,pin){
 				  localStorage.setItem("perc_autista", item.perc_aut);
 				  localStorage.setItem("perc_pass", item.perc_pass);
                   localStorage.setItem("id_utente", item.id_utente);
+				  localStorage.setItem("fotoprof", item.foto);
                   
                   localStorage.setItem("patente", item.patente)
+				  
+				  localStorage.setItem("nomefoto", email.replace("@","").replace(".","").replace(".",""))
+				  
+				  
+				  //alert(localStorage.getItem("nomefoto"))
 				  
 
 				  window.location.href = "index.html";

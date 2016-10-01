@@ -118,10 +118,10 @@
 		<plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
 		<plugin name="com.sharinglabs.cordova.plugin.cache" spec="1.0.0" source="pgb" />
 		<plugin name="cordova-plugin-insomnia" version="4.1.0" source="npm" />
-		<!--<plugin name="phonegap-plugin-push" version="1.4.5" source="npm" >
+		<plugin name="phonegap-plugin-push" version="1.5.3" source="npm" >
 		<variable name="SENDER_ID" value="12250132047" />
-		</plugin>-->
-		<gap:plugin name="pushbots-cordova-plugin" source="npm" />
+		</plugin>
+		<!--<gap:plugin name="pushbots-cordova-plugin" source="npm" />-->
 		<gap:plugin name="cordova-plugin-datepicker" source="npm" />
 		<plugin name="cordova-plugin-statusbar" source="npm" spec="1.0.0" />
 		<gap:plugin name="cordova-plugin-mauron85-background-geolocation" source="npm"/>
