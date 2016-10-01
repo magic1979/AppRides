@@ -24,6 +24,40 @@ receivedEvent: function(id) {
 	
 	window.plugins.insomnia.keepAwake();
 	
+
+	var push = PushNotification.init({
+		android: {
+			senderID: "12250132047"
+		},
+		browser: {
+			pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+		},
+		ios: {
+			alert: "true",
+			badge: "true",
+			sound: "true"
+		},
+		windows: {}
+	});
+
+	push.on('registration', function(data) {
+		alert(data.registrationId)
+	});
+	
+	push.on('notification', function(data) {
+		// data.message,
+		// data.title,
+		// data.count,
+		// data.sound,
+		// data.image,
+		// data.additionalData
+	});
+	
+	push.on('error', function(e) {
+		// e.message
+	});
+	
+	
 	
 	//navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	//navigator.geolocation.watchPosition(gpsonSuccess, gpsonError, {timeout: 50000, enableHighAccuracy: false, maximumAge: 0 });
