@@ -70,11 +70,11 @@ receivedEvent: function(id) {
 	}
 	
 	
-	
 	function successHandler (result) {
 		//$("#app-status-ul").append('<li>success:'+ result +'</li>');
 		
-		alert('result = ' + result);
+		//alert('result = ' + result);
+		testa(result);
 	}
 	
 	function errorHandler (error) {
@@ -113,7 +113,7 @@ receivedEvent: function(id) {
 			   },
 			   error: function(){
 			   
-					 alert("No")
+				 //alert("No")
 			   
 			   },
 			   dataType:"json"});
@@ -827,6 +827,10 @@ receivedEvent: function(id) {
 	$(document).on("touchstart", "#bckimpostazioni", function(e){
                    
 		           $.mobile.changePage( "#home", { transition: "slide", changeHash: false, reverse: true });
+				   //window.location.href = "index.html";
+				   
+				   $("#imgutente").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
+				   $("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
                    
                    vediofferte44();
                    $("#spinner44").show();
