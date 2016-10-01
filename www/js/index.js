@@ -37,14 +37,9 @@ receivedEvent: function(id) {
 	window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"12250132047"}});
 	
 	
-	
-	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
+	/*if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
 	setTimeout(function() {
 			   
-		window.plugins.PushbotsPlugin.on("registered", function(token){
-			console.log(token);
-			//alert(token)
-		});
 			   
 		window.plugins.PushbotsPlugin.getRegistrationId(function(token){
 			 console.log("Registration Id:" + token);
@@ -58,7 +53,7 @@ receivedEvent: function(id) {
 		});
 			   
 	}, 1500);
-	}
+	}*/
 	
 	
 	//------------//
@@ -6387,7 +6382,7 @@ function chiudi22(id) {
 
 
 
-function regToken() {
+/*function regToken() {
 	
 	if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
 		
@@ -6425,7 +6420,7 @@ function regToken() {
 			   },
 			   dataType:"json"});
 	}
-}
+}*/
 
 
 
