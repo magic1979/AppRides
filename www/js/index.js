@@ -41,8 +41,6 @@ receivedEvent: function(id) {
 		
         push.on('registration', function(data) {
             // data.registrationId
-			var pippo = data.registrationId;
-			testa (pippo);
             console.log(data.registrationId);
 
         });
@@ -56,48 +54,6 @@ receivedEvent: function(id) {
             // e.message
             console.log(JSON.stringify(e.message));
         });
-	
-	
-	
-	function testa (testo) {
-		
-		
-		setTimeout (function(){
-					
-		//alert("http://www.msop.it/rides/Check_RegToken.asp?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios")
-		//?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios
-		
-		$.ajax({
-			   type:"GET",
-			   url:"http://www.msop.it/rides/Check_RegToken.asp",
-			   data: {email:localStorage.getItem("email"),token:testo,platform:"android"},
-			   contentType: "application/json",
-			   json: 'callback',
-			   timeout: 7000,
-			   crossDomain: true,
-			   success:function(result){
-			   
-			   $.each(result, function(i,item){
-			   
-			     setTimeout (function(){
-					localStorage.setItem("Token", testo);
-					//alert(testo);
-				}, 500);
-			   
-			   });
-			   
-			   },
-			   error: function(){
-			   
-				 //alert("No")
-			   
-			   },
-			   dataType:"json"});
-					
-		}, 500);
-		
-		
-	}
 	
 
 
