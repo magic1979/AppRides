@@ -26,6 +26,22 @@ receivedEvent: function(id) {
 	
 	
 	//////// PUSH NUOVE //////
+	
+	var push = PushNotification.init({
+		android: {
+			senderID: "930697186929"
+		},
+		browser: {
+			pushServiceURL: 'http://push.api.phonegap.com/v1/push'
+		},
+		ios: {
+			alert: "true",
+			badge: "true",
+			sound: "true"
+		},
+		windows: {}
+	});
+	
 
 	var pushNotification;
 	var token
@@ -49,8 +65,9 @@ receivedEvent: function(id) {
 	function errorHandler (error) {
 
 	}
-		
-        
+	
+	
+
      push.on('notification', function(data) {
         console.log(JSON.stringify(data.additionalData));
 
