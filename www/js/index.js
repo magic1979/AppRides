@@ -26,59 +26,39 @@ receivedEvent: function(id) {
 	
 	
 	//////// PUSH NUOVE //////
-	
+
 	var push = PushNotification.init({
-		android: {
-			senderID: "930697186929"
-		},
-		browser: {
-			pushServiceURL: 'http://push.api.phonegap.com/v1/push'
-		},
-		ios: {
-			alert: "true",
-			badge: "true",
-			sound: "true"
-		},
-		windows: {}
-	});
-	
+			android: {
+					senderID: "930697186929"
+			},
+			ios: {
+					alert: "true",
+					badge: "true",
+					sound: "true"
+			},
+			windows: {}
+        });
+		
+        push.on('registration', function(data) {
+            // data.registrationId
+			var pippo = data.registrationId;
+			testa (pippo);
+            console.log(data.registrationId);
 
-	var pushNotification;
-	var token
+        });
+		
+        push.on('notification', function(data) {
+            console.log(JSON.stringify(data.additionalData));
 
-	pushNotification = window.plugins.pushNotification;
-	
-	pushNotification.register(
-    successHandler,
-    errorHandler,
-    {
-        "senderID":"930697186929",
-        "ecb":"onNotification"
-    });	// required!
+        });
+		
+        push.on('error', function(e) {
+            // e.message
+            console.log(JSON.stringify(e.message));
+        });
 	
 	
-	function successHandler (result) {
-
-		testa(result);
-	}
 	
-	function errorHandler (error) {
-
-	}
-	
-	
-
-     push.on('notification', function(data) {
-        console.log(JSON.stringify(data.additionalData));
-
-     });
-     push.on('error', function(e) {
-        // e.message
-        console.log(JSON.stringify(e.message));
-      });
-	
-	
-
 	function testa (testo) {
 		
 		
@@ -119,6 +99,7 @@ receivedEvent: function(id) {
 		
 	}
 	
+
 
 	/////////////////////////////////////
 	
