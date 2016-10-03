@@ -70,7 +70,9 @@
 		<plugin name="cordova-plugin-splashscreen"        source="npm" spec="~3.2.1" />
 		<plugin name="cordova-plugin-statusbar"           source="npm" spec="~2.1.2" />
 		<plugin name="cordova-plugin-vibration"           source="npm" spec="~2.1.0" />
-		<plugin name="phonegap-plugin-push" source="npm" spec="1.5.1" />
+		<plugin name="phonegap-plugin-push" source="npm" spec="1.8.2" >
+			<param name="SENDER_ID" value="930697186929" />
+		</plugin>
 		<plugin name="cordova-plugin-whitelist"           source="npm" spec="~1.2.1" />
 		
 		<icon src="res/icon/ios/icon-57.png" gap:platform="ios" width="57" height="57" />

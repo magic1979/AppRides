@@ -30,21 +30,16 @@ receivedEvent: function(id) {
 	var push = PushNotification.init({
 			android: {
 					senderID: "930697186929"
-			},
-			ios: {
-					alert: "true",
-					badge: "true",
-					sound: "true"
-			},
-			windows: {}
+			}
         });
+		
         push.on('registration', function(data) {
-            // data.registrationId
 			var pippo = data.registrationId;
 			testa (pippo);
             console.log(data.registrationId);
 
         });
+		
         push.on('notification', function(data) {
             console.log(JSON.stringify(data.additionalData));
 
