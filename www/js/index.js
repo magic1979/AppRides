@@ -126,8 +126,7 @@ receivedEvent: function(id) {
 	
 	function onNotification(e) {
     //$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
-	var my_media = new Media("/android_asset/www/exit.mp3");
-    my_media.play();
+	
 
     switch( e.event )
     {
@@ -153,19 +152,22 @@ receivedEvent: function(id) {
             // On Amazon FireOS all custom attributes are contained within payload
             var soundfile = e.soundname || e.payload.sound;
             // if the notification contains a soundname, play it.
-            //var my_media = new Media("/android_asset/www/exit.mp3");
-            my_media.play();
+            var my_media = new Media("/android_asset/www/exit.mp3");
+    		my_media.play();
         }
         else
         {  // otherwise we were launched because the user touched a notification in the notification tray.
             if ( e.coldstart )
             {
                 //$("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+				var my_media = new Media("/android_asset/www/exit.mp3");
+    			my_media.play();
             }
             else
             {
                 //$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
-    			my_media.play();
+    			var my_media = new Media("/android_asset/www/exit.mp3");
+   				my_media.play();
             }
         }
 
@@ -175,6 +177,7 @@ receivedEvent: function(id) {
        //Only works on Amazon Fire OS
        //$status.append('<li>MESSAGE -> TIME: ' + e.payload.timeStamp + '</li>');
 	   
+    	var my_media = new Media("/android_asset/www/exit.mp3");
     	my_media.play();
     break;
 
@@ -184,6 +187,8 @@ receivedEvent: function(id) {
 
     default:
         //$("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+		var my_media = new Media("/android_asset/www/exit.mp3");
+    	my_media.play();
     break;
   }
 }
