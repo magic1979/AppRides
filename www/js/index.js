@@ -135,7 +135,7 @@ receivedEvent: function(id) {
             //$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
             // Your GCM push server needs to know the regID before it can push to this device
             // here is where you might want to send it the regID for later use.
-            console.log("regID = " + e.regid);
+            //console.log("regID = " + e.regid);
 			testa (e.regid)
         }
     break;
@@ -149,10 +149,10 @@ receivedEvent: function(id) {
 
             // on Android soundname is outside the payload.
             // On Amazon FireOS all custom attributes are contained within payload
-            //var soundfile = e.soundname || e.payload.sound;
+            var soundfile = e.soundname || e.payload.sound;
             // if the notification contains a soundname, play it.
-            //var my_media = new Media("/android_asset/www/"+ soundfile);
-            //my_media.play();
+            var my_media = new Media("/android_asset/www/"+ soundfile);
+            my_media.play();
         }
         else
         {  // otherwise we were launched because the user touched a notification in the notification tray.
