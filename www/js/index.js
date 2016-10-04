@@ -29,14 +29,6 @@ receivedEvent: function(id) {
 	
 	
 	var push = PushNotification.init({
-		android: {
-			"senderID":"930697186929"
-		},
-		ios: {},
-		windows: {}
-	});
-	
-	var push = PushNotification.init({
         "android": {
             "senderID": "930697186929"
         },
