@@ -25,43 +25,32 @@ receivedEvent: function(id) {
 	window.plugins.insomnia.keepAwake();
 	
 	
+	var my_media = new Media("/android_asset/www/exit.mp3");
+    my_media.play();
+	
+	
 	///////// PUSH NUOVE ///////
 	
 	
-	var push = PushNotification.init({
-        "android": {
-            "senderID": "930697186929"
-        },
-        "ios": {
-			"senderID": "930697186929",
-			"gcmSandbox": "true",
-			"alert": "true",
-			"badge": "true",
-			"sound": "true"
-        },
-        "windows": {}
-     });
+	window.plugins.PushbotsPlugin.initialize("57275d964a9efaa2798b4567", {"android":{"sender_id":"930697186929"}});
+	
+	
+	window.plugins.PushbotsPlugin.on("notification:received", function(data){
+		//console.log("received:" + JSON.stringify(data));
+	});
 
-	 
-	push.on('registration', function(data) {
+	// Should be called once the notification is clicked
+	window.plugins.PushbotsPlugin.on("notification:clicked", function(data){
+		//console.log("clicked:" + JSON.stringify(data));
+	});
+	
+	
+	window.plugins.PushbotsPlugin.getRegistrationId(function(token){
+		//console.log("Registration Id:" + token);
 		
-		testa(data.registrationId);
-		
-		// data.registrationId
+		testa(token);
 	});
 
-	push.on('notification', function(data) {
-		// data.message,
-		// data.title,
-		// data.count,
-		// data.sound,
-		// data.image,
-		// data.additionalData
-	});
-
-	push.on('error', function(e) {
-		// e.message
-	});
 	
 	function testa (testo) {
 		
@@ -84,7 +73,7 @@ receivedEvent: function(id) {
 			   $.each(result, function(i,item){
 			   
 			     setTimeout (function(){
-					localStorage.setItem("Token", testo);
+					localStorage.setItem("MyToken", "1");
 					//alert(testo);
 				}, 500);
 			   
