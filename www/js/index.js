@@ -35,7 +35,22 @@ receivedEvent: function(id) {
 		ios: {},
 		windows: {}
 	});
+	
+	var push = PushNotification.init({
+        "android": {
+            "senderID": "930697186929"
+        },
+        "ios": {
+			"senderID": "930697186929",
+			"gcmSandbox": "true",
+			"alert": "true",
+			"badge": "true",
+			"sound": "true"
+        },
+        "windows": {}
+     });
 
+	 
 	push.on('registration', function(data) {
 		
 		testa(data.registrationId);
