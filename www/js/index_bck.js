@@ -25,76 +25,11 @@ receivedEvent: function(id) {
 	window.plugins.insomnia.keepAwake();
 	
 	
-	IDPage = getParameterByName('id');
-	ODPage = getParameterByName('od');
-	
-	
-	localStorage.setItem("palla1", "0")
-	localStorage.setItem("palla2", "0")
-	
-	
-	//// MOVIMENTO LINCE ////
-	
-	$(init);
-	
-	function init() {
-		$('#test').draggable({
-			revert: "Inhvalid"  //valid se ritorna dopo al suo posto, Inhvalid se effetto molla
-        });
-		
-		$('#makeMeDroppable').droppable({
-										drop: handleDropEvent,
-										activeClass: 'ui-state-hover',
-										tolerance: "touch"
-										});
-	}
-	// fit(all), Intersect(50%), pointer(mouse nel contenitore), touch(appena toccato)
-	
-	function handleDropEvent(event, ui) {
-		var draggable = ui.draggable;
-		alert('The square with ID "' + draggable.attr('id') + '" was dropped onto me!');
-	}
-	
-	
-	///// FINE /////
-	
-	
-	/*if(IDPage==3){
-		window.location.href = "#home";
-		
-		$("#nickmio").html("<font color='#000'><b>" + localStorage.getItem("nick") + "</b></font>")
-		
-		$(".spinner").hide();
-		
-
-		localStorage.setItem("scroller","0");
-		localStorage.setItem("scroller22","0");
-		
-		vediofferte44()
-		
-		$("#spinner44").show();
-		
-		
-		$("#footer").fadeIn();
+	//var my_media = new Media("/android_asset/www/exit.mp3");
+	playAudioA('successSound');
 
 		
-		e.stopImmediatePropagation();
-		
-		e.preventDefault();
-		
-		return false;
-		
-		if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-
-		
-	}*/
-	
-	if(IDPage!=1){
-		localStorage.setItem("exit", "0")
-	}
-	
-	
-	//////// PUSH NUOVE IOS //////
+	///////// PUSH NUOVE ///////
 	
 	var pushNotification;
 	var token
@@ -108,7 +43,13 @@ receivedEvent: function(id) {
 		pushNotification.register(successHandler, errorHandler, {"senderID":"12250132047","ecb":"onNotification"});		// required!
 	} else {*/
 	
-	pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
+	pushNotification.register(
+    successHandler,
+    errorHandler,
+    {
+        "senderID":"930697186929",
+        "ecb":"onNotification"
+    });	// required!
 	//}
 	
 
@@ -131,13 +72,12 @@ receivedEvent: function(id) {
 		
 	}
 	
-	//pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, 0);
-	
 	
 	function successHandler (result) {
 		//$("#app-status-ul").append('<li>success:'+ result +'</li>');
 		
 		//alert('result = ' + result);
+		testa(result);
 	}
 	
 	function errorHandler (error) {
@@ -149,9 +89,6 @@ receivedEvent: function(id) {
 	function testa (testo) {
 		
 		
-		
-		if (localStorage.getItem("RegToken") === null || typeof(localStorage.getItem("RegToken")) == 'undefined' || localStorage.getItem("RegToken")=="null" || localStorage.getItem("RegToken")==""){
-		
 		setTimeout (function(){
 					
 		//alert("http://www.msop.it/rides/Check_RegToken.asp?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios")
@@ -160,7 +97,7 @@ receivedEvent: function(id) {
 		$.ajax({
 			   type:"GET",
 			   url:"http://www.msop.it/rides/Check_RegToken.asp",
-			   data: {email:localStorage.getItem("email"),token:testo,platform:"ios"},
+			   data: {email:localStorage.getItem("email"),token:testo,platform:"android"},
 			   contentType: "application/json",
 			   json: 'callback',
 			   timeout: 7000,
@@ -169,15 +106,17 @@ receivedEvent: function(id) {
 			   
 			   $.each(result, function(i,item){
 			   
-					localStorage.setItem("RegToken", "1");
+			     setTimeout (function(){
+					localStorage.setItem("Token", testo);
 					//alert(testo);
+				}, 500);
 			   
 			   });
 			   
 			   },
 			   error: function(){
 			   
-				  //alert("No")
+				 //alert("No")
 			   
 			   },
 			   dataType:"json"});
@@ -185,55 +124,73 @@ receivedEvent: function(id) {
 		}, 500);
 		
 		
-		}
-	}
-
-	
-	function onNotificationAPN (event) {
-		
-		
-		if ( event.alert )
-		{
-			navigator.notification.alert(event.alert);
-		}
-		
-		if ( event.sound )
-		{
-			var snd = new Media(event.sound);
-			snd.play();
-		}
-		
-		if ( event.badge )
-		{
-			pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, 0);
-			
-		}
 	}
 	
 	
-	//pushNotification.setApplicationIconBadgeNumber(successCallback, errorCallback, 0);
-	
-	//function successCallback(){}
-	//function errorCallback(){}
+	function onNotification(e) {
+    //$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
 	
 
-	/*if (localStorage.getItem("Token") === null || typeof(localStorage.getItem("Token")) == 'undefined' || localStorage.getItem("Token")=="null") {
-		
-		setTimeout (function(){
-					
-			PushbotsPlugin.getToken(function(token){
-											
-				localStorage.setItem("Token", token);
-				console.log(token);
-				alert(token)
-				//regToken()
-											
-			});
-					
-		}, 1500);
-		
-	}*/
-	
+    switch( e.event )
+    {
+    case 'registered':
+        if ( e.regid.length > 0 )
+        {
+            //$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
+            // Your GCM push server needs to know the regID before it can push to this device
+            // here is where you might want to send it the regID for later use.
+            //console.log("regID = " + e.regid);
+			testa (e.regid)
+        }
+    break;
+
+    case 'message':
+        // if this flag is set, this notification happened while we were in the foreground.
+        // you might want to play a sound to get the user's attention, throw up a dialog, etc.
+        if ( e.foreground )
+        {
+            //$("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+
+            // on Android soundname is outside the payload.
+            // On Amazon FireOS all custom attributes are contained within payload
+            var soundfile = e.soundname || e.payload.sound;
+            // if the notification contains a soundname, play it.
+			playAudioA('successSound');
+        }
+        else
+        {  // otherwise we were launched because the user touched a notification in the notification tray.
+            if ( e.coldstart )
+            {
+                //$("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+				playAudioA('successSound');
+            }
+            else
+            {
+                //$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+				playAudioA('successSound');
+            }
+        }
+
+       //$("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
+           //Only works for GCM
+       //$("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+       //Only works on Amazon Fire OS
+       //$status.append('<li>MESSAGE -> TIME: ' + e.payload.timeStamp + '</li>');
+	   
+		playAudioA('successSound');
+    break;
+
+    case 'error':
+        //$("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
+    break;
+
+    default:
+        //$("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+		playAudioA('successSound');
+    break;
+  }
+}
+
 
 	/////////////////////////////////////
 	
@@ -290,18 +247,15 @@ receivedEvent: function(id) {
 	//localStorage.setItem("lat", lat)
 	//localStorage.setItem("lng", lng)
 	
-	//e.preventDefault();
-	
-	// STOP PAGE
-	
-	document.addEventListener("touchmove",function(e) {
-		e.preventDefault();
-	},
-	false
-	);
 	
 	var email = localStorage.getItem("email");
 	
+	
+	if (localStorage.getItem("email") === null || localStorage.getItem("email")=="null" || typeof(localStorage.getItem("email")) == 'undefined' || localStorage.getItem("email")==0 || localStorage.getItem("email")=="") {
+		
+		window.location.href = "Login.html";
+		
+	}
 	
 	var lat = localStorage.getItem("lat");
 	var lng = localStorage.getItem("lng");
@@ -311,41 +265,14 @@ receivedEvent: function(id) {
 	var connectionStatus = false;
 	connectionStatus = navigator.onLine ? 'online' : 'offline';
 	
-	
-	
-	$('#scelta').on('change', function(){
-		var $this = $(this),
-		$value = $this.val();
-				   
-		if($value=="1"){
-			$("#mobilita").tap();
-		}
-		else{
-				   navigator.notification.alert(
-												'Servizio disponibile a breve.',  // message
-												alertDismissed,         // callback
-												'Servizio',           // title
-												'OK'                  // buttonName
-												);
-		}
-	});
-	
-	
-	
-	
-	
-	
 	if(connectionStatus=='online'){
 		$('#noconn').hide();
 		
 		localStorage.setItem("risppass44", "")
-		localStorage.setItem("risppass444", "")
 		localStorage.setItem("chatpass", "")
 		
 		$("#imgutente").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-		$("#imgutente2").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
 		$("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-		$("#imguser").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
 		
 		startgps();
 		
@@ -388,16 +315,10 @@ receivedEvent: function(id) {
 		$(".spinner").hide();
 		
 		localStorage.setItem("scroller","0");
-		localStorage.setItem("scroller22","0");
+		vediofferte44()
 		
-		
-		
-		//vediofferte44()
-		
-		//$("#spinner44").show();
-		
-		
-		
+		$("#spinner44").show();
+        
 		/*refreshPos = setInterval(function() {
 			controllaofferte()
 		}, 7000);*/
@@ -413,16 +334,6 @@ receivedEvent: function(id) {
 		}
 		
 		google.maps.event.addDomListener(window, 'load', initialize);*/
-		
-		//$("#footer").fadeIn();
-		
-		
-		if(IDPage!=3){
-		setTimeout (function(){
-			resetta1()
-		}, 200);
-		}
-		
 		
 	}
 	
@@ -460,6 +371,16 @@ receivedEvent: function(id) {
 	}
 	
 	
+	IDPage = getParameterByName('id');
+	ODPage = getParameterByName('od');
+	
+	
+	localStorage.setItem("palla1", "0")
+	localStorage.setItem("palla2", "0")
+	
+	if(IDPage!=1){
+	  localStorage.setItem("exit", "0")
+	}
 	
 	//$("#tblhome").html('<table id="tblhome" width="90%" height="'+ altezzatbl +'" border="0" valign="center" align="center" class="tabella"><tr height="48%"><td width="100%" align="center"><a id="mappa6" href="#" rel="external"><img src="img/Volante.png" width="120px"></a><p class="testo_sottotitolo">voglio essere autista</p><table><tr><td><table id="profiloperc" class="tabella1"><tr><td><font color="#FFF" size="4" class="testo_bianco">Profilo '+ localStorage.getItem("perc_autista") +'%</font></td></tr></table></td><td><div id="stelleautista"></div></td></tr></table></td></tr><tr height="2%"><td width="70%" align="center"><hr></td></tr><tr height="48%"> <td width="100%" align="center"><a id="mappa7" href="#" rel="external"><img src="img/Valigia.png" width="120px"></a><p class="testo_sottotitolo">voglio essere passeggero</p><table><tr><td><table id="profiloperc2" class="tabella1"><tr><td><font color="#FFF" size="4" class="testo_bianco">Profilo '+ localStorage.getItem("perc_pass") +'%</font></td></tr></table></td><td><div id="stellepass"></div></td></tr></table></td> </tr><tr height="10%"> <td width="100%" align="center"></td></tr></table>')
 	
@@ -476,6 +397,8 @@ receivedEvent: function(id) {
 	
 	
 	//STELLE
+	
+
 	
 	
 	isTabHolded=false;
@@ -535,6 +458,10 @@ receivedEvent: function(id) {
 	
 	var myScroll;
 	
+	setTimeout (function(){
+		$("#footer").fadeIn();
+	}, 500);
+	
 	
 	$(document).on("tap", "#altro", function(e){
                    
@@ -542,164 +469,23 @@ receivedEvent: function(id) {
                    
 	});
 	
-	$(document).on("tap", "#viaggi", function(e){
-				   
-				   navigator.notification.alert(
-												'Servizio disponibile a breve.',  // message
-												alertDismissed,         // callback
-												'Servizio',           // title
-												'OK'                  // buttonName
-												);
-				   
-				   });
-	
-	$(document).on("tap", "#food", function(e){
-				   
-				   navigator.notification.alert(
-												'Servizio disponibile a breve.',  // message
-												alertDismissed,         // callback
-												'Servizio',           // title
-												'OK'                  // buttonName
-												);
-				   
-				   });
-	
-	$(document).on("tap", "#servizi", function(e){
-				   
-				   navigator.notification.alert(
-												'Servizio disponibile a breve.',  // message
-												alertDismissed,         // callback
-												'Servizio',           // title
-												'OK'                  // buttonName
-												);
-				   
-				   });
-	
-	$(document).on("tap", "#testo", function(e){
-				   
-		window.location.href = "#disegna";
-				   
-	});
-	
-	
-	$(document).on("tap", "#messaggi", function(e){
-				   
-		window.location.href = "Notifiche.html";
-				   
-	});
-	
-	$(document).on("tap", "#altro2", function(e){
-				   
-		resetta1()
-				   
-	});
-	
-	
-	// SCREEN SHOT ///
-	
-	$(document).on("tap", "#stampa", function(e){
-				   
-		navigator.screenshot.save(function(error,res){
-	      if(error){
-            console.error(error);
-											 }else{
-            console.log('ok',res.filePath);
-											 
-            var MEsuccess = function(msg){
-               alert(msg);
-            };
-											 
-            var MEerror = function(err){
-			   alert(err);
-            };
-											 
-            saveImageToPhone(res.filePath, MEsuccess, MEerror);
-											 }
-		},'jpg',90);
-				   
-	});
-	
-	
-	function saveImageToPhone(imageURI, success, error) {
-		var canvas, context, imageDataUrl, imageData;
-		//var img = new Image();
+	function playAudioA(id) {
+		var audioElement = document.getElementById(id);
+		var url = audioElement.getAttribute('src');
+		var my_media = new Media(url,
+				// success callback
+				 function () { console.log("playAudio():Audio Success"); },
+				// error callback
+				 function (err) { console.log("playAudio():Audio Error: " + err); }
+		);
+			   // Play audio
+		my_media.setVolume('7.0');
+		my_media.play();
 		
-		var largeImage = document.getElementById('imgfoto4');
-
-		largeImage.style.display = 'block';
-
-		largeImage.src = imageURI;
-		
-		
-		/*var options = new FileUploadOptions();
-		options.fileKey="file";
-		
-		options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
-		options.mimeType="image/jpeg";
-		
-		var params = {};
-		params.value1 = "piantina";
-		params.value2 = "param";
-		
-		options.params = params;
-		
-		var ft = new FileTransfer();
-		ft.upload(imageURI, encodeURI("http://msop.it/uploadrides.php"), win, fail, options);*/
-		
-		
-		alert("ok")
+		setTimeout(function() {
+		   my_media.stop();
+		}, 3000);
 	}
-	
-	
-	// FINE //
-	
-	
-	$(document).on("tap", "#mobilita", function(e){
-				   
-		if (localStorage.getItem("email") === null || localStorage.getItem("email")=="null" || typeof(localStorage.getItem("email")) == 'undefined' || localStorage.getItem("email")==0 || localStorage.getItem("email")=="") {
-				   
-			window.location.href = "Login.html";
-				   
-		}
-				   
-				   
-		$.mobile.changePage( "#home", { transition: "slide", changeHash: false, reverse: true });
-				   
-		
-				   $("#nickmio").html("<font color='#000'><b>" + localStorage.getItem("nick") + "</b></font>")
-				   
-				   $(".spinner").hide();
-				   
-				   
-				   
-				   localStorage.setItem("scroller","0");
-				   localStorage.setItem("scroller22","0");
-				   
-				   vediofferte44()
-				   
-				   $("#spinner44").show();
-				   
-				   
-				   
-				   /*refreshPos = setInterval(function() {
-					controllaofferte()
-					}, 7000);*/
-				   
-				   
-				   /*function initialize() {
-					var mapProp = {
-					center:new google.maps.LatLng(41.783780,12.364947),
-					zoom:5,
-					mapTypeId:google.maps.MapTypeId.ROADMAP
-					};
-					var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
-					}
-					
-					google.maps.event.addDomListener(window, 'load', initialize);*/
-				   
-				   $("#footer").fadeIn();
-
-	});
 	
 	
 	// PER FOTOCAMERA //
@@ -708,21 +494,11 @@ receivedEvent: function(id) {
 				   
 		navigator.camera.getPicture(uploadPhoto, onFail, { quality: 50,
 		destinationType: Camera.DestinationType.FILE_URI,
-		sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+		sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
 		targetWidth: 200,
 		targetHeight: 200
 		});
 	});
-	
-	$(document).on("tap", "#prendifoto2", function(e){
-				   
-				   navigator.camera.getPicture(uploadPhoto2, onFail, { quality: 50,
-											   destinationType: Camera.DestinationType.FILE_URI,
-											   sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-											   targetWidth: 200,
-											   targetHeight: 200
-											   });
-				   });
 	
 	$(document).on("tap", "#scattafoto", function(e){
 				   
@@ -798,19 +574,6 @@ receivedEvent: function(id) {
 		ft.upload(imageURI, encodeURI("http://msop.it/uploadrides.php"), win, fail, options);
 	}
 	
-	function uploadPhoto2(imageURI) {
-		var largeImage = document.getElementById('imgfoto4');
-		// Unhide image elements
-		//
-		largeImage.style.display = 'block';
-		// Show the captured photo
-		// The inline CSS rules are used to resize the image
-		//
-		largeImage.src = imageURI;
-		
-		
-	}
-	
 	function win(r) {
 		console.log("Code = " + r.responseCode);
 		console.log("Response = " + r.response);
@@ -820,15 +583,7 @@ receivedEvent: function(id) {
 	}
 	
 	function fail(error) {
-		
-		navigator.notification.alert(
-			'Nessuna foto archiviata, riprova',  // message
-			alertDismissed,         // callback
-			'Foto',            // title
-			'OK'                  // buttonName
-		);
-		
-		//alert("An error has occurred: Code = " + error.code);
+		alert("An error has occurred: Code = " + error);
 	}
 
 	/// FINE FOTOCAMERA ///
@@ -837,16 +592,9 @@ receivedEvent: function(id) {
 	
 	$(document).on("tap", "#gofacebook", function(e){
 				   
-		var ref = window.open('https://m.facebook.com/RideShareApp/?fref=ts', '_system', 'location=no');
+			var ref = window.open('https://m.facebook.com/RideShareApp/?fref=ts', '_system', 'location=no');
 				   
 
-	});
-	
-	$(document).on("tap", "#goinsta", function(e){
-				   
-		var ref = window.open('https://www.instagram.com/ridy_app/', '_system', 'location=no');
-				   
-				   
 	});
 	
 	
@@ -1101,16 +849,15 @@ receivedEvent: function(id) {
 	});
 	
 	$(document).on("touchstart", "#bckimpostazioni", function(e){
-				   
-				   
-		           //$.mobile.changePage( "#home", { transition: "slide", changeHash: false, reverse: true });
-				   
-				   resetta1()
-				   
-				   //window.location.href = "index.html";
                    
-                   //vediofferte44();
-                   //$("#spinner44").show();
+		           $.mobile.changePage( "#home", { transition: "slide", changeHash: false, reverse: true });
+				   //window.location.href = "index.html";
+				   
+				   $("#imgutente").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
+				   $("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
+                   
+                   vediofferte44();
+                   $("#spinner44").show();
 				   
 				   e.stopImmediatePropagation();
 				   
@@ -1246,13 +993,6 @@ receivedEvent: function(id) {
 	
 	
 	
-	function aprimappa(){
-		
-		//resetta1();
-				   
-	};
-	
-	
 	$(document).on("tap", "#offerte48", function(e){
 				   
 		//$.mobile.changePage( "#home44", { transition: "slide", changeHash: false });
@@ -1272,115 +1012,11 @@ receivedEvent: function(id) {
 	
 	
 	$(document).on("touchstart", "#offerte", function(e){
+			$.mobile.changePage( "#home2", { transition: "slide", changeHash: false });
 				   
 				   
-				   $.ajax({
-						  type:"GET",
-						  
-						  url:"http://msop.it/rides/check_richiesta_passeggiV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"",
-						  contentType: "application/json",
-						  timeout: 7000,
-						  jsonp: 'callback',
-						  crossDomain: true,
-						  success:function(result){
-						  
-						  $.each(result, function(i,item){
-								 
-							if(item.Token==1){
-								 
-								 
-							  $.mobile.changePage( "#home22", { transition: "slide", changeHash: false });
-								 
-							  vedipassaggi()
-								 
-							  $("#spinner2").show();
-
-							}
-							else{
-								 
-								 $.ajax({
-										type:"GET",
-										
-										url:"http://msop.it/rides/check_richiesta_autistaV4.php?email="+ localStorage.getItem("email") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"&id_autista="+ localStorage.getItem("id_autista") +"&fuso=154&ora_cell="+ localStorage.getItem("ora_cell") +"",
-										contentType: "application/json",
-										timeout: 7000,
-										jsonp: 'callback',
-										crossDomain: true,
-										success:function(result){
-										
-										$.each(result, function(i,item){
-											   
-											   //alert(item.Token)
-											   
-											   if(item.Token==1){
-											   
-											   //alert(item.Token)
-											   
-											   $.mobile.changePage( "#home22", { transition: "slide", changeHash: false });
-											   
-											   vedipassaggi()
-											   
-											   $("#spinner2").show();
-											   
-											   }
-											   else{
-											   //alert(item.Token)
-											   
-											   $.mobile.changePage( "#homeins", { transition: "slide", changeHash: false });
-											   
-											   }
-											   
-											   
-											   });
-										
-										
-										},
-										error: function(jqxhr,textStatus,errorThrown){
-										
-										
-										navigator.notification.alert(
-																	 'Possibile errore di rete, riprova tra qualche minuto.',
-																	 alertDismissed,
-																	 'Attenzione',
-																	 'Done'
-																	 );
-										
-										
-										},
-										dataType:"jsonp"});
-							  
-							  //$.mobile.changePage( "#homeins", { transition: "slide", changeHash: false });
-								 
-							}
- 
-								 
-						   });
-						
-						  
-						  },
-						  error: function(jqxhr,textStatus,errorThrown){
-						  
-
-						  navigator.notification.alert(
-													   'Possibile errore di rete, riprova tra qualche minuto.',
-													   alertDismissed,
-													   'Attenzione',
-													   'Done'
-													   );
-						  
-						  
-						  },
-					dataType:"jsonp"});
-				   
-
-				   
-				   
-			//$.mobile.changePage( "#home22", { transition: "slide", changeHash: false });
-				   
-			//vedipassaggi()
-				   
-			//vedipassaggi()
-				   
+			vediofferte()
+			$("#spinner2").show();
 			
 			e.stopImmediatePropagation();
 				   
@@ -1391,104 +1027,8 @@ receivedEvent: function(id) {
 			if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 	});
 	
-	
-	
-	$(document).on("touchstart", "#vedi_passaggi", function(e){
-	  
-				   $("#spinner44").show();
-				   $.ajax({
-						  type:"GET",
-						  url:"http://msop.it/rides/check_richiesta_autista_passaggioV4.php?email="+ localStorage.getItem("email") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"&id_autista="+ localStorage.getItem("id_autista") +"&fuso=154&ora_cell="+ localStorage.getItem("ora_cell") +"",
-						  contentType: "application/json",
-						  timeout: 7000,
-						  jsonp: 'callback',
-						  crossDomain: true,
-						  success:function(result){
-						  
-						  $.each(result, function(i,item){
-								 
-							 if(item.Token==1){
-								 
-							   window.location.href = "mappass.html?id=1"
-								 
-							 }
-							 else{
-								 setTimeout (function(){
-									 $("#spinner44").hide();
-								  }, 2000);
-
-								
-							  //$.mobile.changePage( "#homeins", { transition: "slide", changeHash: false });
-								 
-							 }
-								 
-								 
-						   });
-						  
-						  
-						  },
-						  error: function(jqxhr,textStatus,errorThrown){
-						  
-						  $("#spinner44").hide();
-						  navigator.notification.alert(
-													   'Possibile errore di rete, riprova tra qualche minuto.',
-													   alertDismissed,
-													   'Attenzione',
-													   'Done'
-													   );
-						  
-						  
-						  },
-					dataType:"jsonp"});
-		
-		
-				   
-		//$.mobile.changePage( "#home22", { transition: "slide", changeHash: false });
-
-				   
-	   e.stopImmediatePropagation();
-				   
-	   e.preventDefault();
-				   
-		return false;
-				   
-		if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-	});
-	
-	
-	$(document).on("tap", "#inserisci", function(e){
-				   $.mobile.changePage( "#homeins", { transition: "slide", changeHash: false });
-				   
-
-				   //vediofferte()
-				   
-				   e.stopImmediatePropagation();
-				   
-				   e.preventDefault();
-				   
-				   return false;
-				   
-				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-	});
-	
-	$(document).on("touchstart", "#XX4", function(e){
-		$.mobile.changePage( "#home22", { transition: "slide", changeHash: false, reverse: true });
-				   
-				   
-		//vediofferte()
-				   
-	    e.stopImmediatePropagation();
-				   
-		e.preventDefault();
-				   
-		return false;
-				   
-		if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-	});
-	
 
 	$(document).on("touchstart", "#impostazioni", function(e){
-				   
 		$.mobile.changePage( "#home3", { transition: "slide", changeHash: false });
 				   
 				   var connectionStatus = false;
@@ -1497,18 +1037,8 @@ receivedEvent: function(id) {
 				   if(connectionStatus=='online'){
 				   
 				      $("#imgfoto").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-					  $("#imguser").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
 
 				   }
-				   
-				   
-				   var myScroll2;
-					
-					myScroll2 = new IScroll('#wrapper2', { click: true });
-					
-					document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 300); }, false);
-					
-					document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
 				   
                    $("#spinner3").show();
@@ -1525,11 +1055,8 @@ receivedEvent: function(id) {
 						  $.each(result, function(i,item){
 								 
 								 if(item.Token==1){
-								 
-								 if(parseFloat(item.quante)>=0 && parseFloat(item.quante)<=9){
-									$("#status1").html("<font color='#000'><b>Esperienza: Principiante</b></font>")
-								 }
-                                 else if(parseFloat(item.quante)>=9 && parseFloat(item.quante)<=49){
+                                 
+                                 if(parseFloat(item.quante)>=0 && parseFloat(item.quante)<=49){
                                     //alert(item.quante)
                                     $("#status1").html("<font color='#000'><b>Esperienza: Decano</b></font>")
                                  }
@@ -1618,11 +1145,7 @@ receivedEvent: function(id) {
 															  );
 								 
 								 }
-							});
-						  
-						    setTimeout (function(){
-							  myScroll2.refresh();
-							}, 1000);
+								 });
 						  
 						  
 						  },
@@ -1821,89 +1344,19 @@ receivedEvent: function(id) {
 				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				   
 				   });
-				   
-				   
-	$(document).on("tap", "#polici", function(e){
-				   var ref = window.open('http://www.msop.it/3rides/policy.html', '_blank', 'location=no');
-				   
-				   e.stopImmediatePropagation();
-				   
-				   e.preventDefault();
-				   
-				   return false;
-				   
-				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				   
-				   });
 	
 	
 	$(document).on("tap", "#mandaemail", function(e){
 				   
 			window.plugin.email.open({
-				to:      "info@ridy.it",
+				to:      "rides.share.app@gmail.com",
 				subject: "Contattaci",
 				body:    "Richiedi informazioni",
 				isHtml:  true
 			});
 				   
 				   
-				   
 	});
-	
-	
-	$(document).on("tap", "#condividi", function(e){
-				   
-		           window.plugins.socialsharing.shareViaFacebook('Scegli RIDY e contribuisci alla Mobilita Sostenibile', 'http://www.msop.it/3rides/logo.png', 'www.ridy.it', function() {console.log('share ok')}, function(errormsg){})
-				   
-				   
-				   e.stopImmediatePropagation();
-				   
-				   e.preventDefault();
-				   
-				   return false;
-				   
-				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-	});
-	
-	
-	if(localStorage.getItem("apprate")!="1"){
-		
-	setTimeout(function() {
-
-				   navigator.notification.confirm(
-												  'Il team di Ridy è orgoglioso di presentare la nostra nuova app. Aiutaci a migliorarla e dicci cosa ne pensi',  // message
-												  onConfirm3,              // callback to invoke with index of button pressed
-												  'Ti piace la nostra nuova app?',            // title
-												  'Vota ora,Piu Tardi'      // buttonLabels
-												  );
-			   
-			   
-			   localStorage.setItem("apprate","1")
-			   
-	}, 5000);
-	}
-	
-	
-	function onConfirm3(button) {
-		if(button==1){    //If User selected No, then we just do nothing
-			
-			window.open('http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1146484648&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8', '_system', 'location=no');
-			
-			return;
-		}
-		/*}else{
-			e.preventDefault();
-			navigator.app.exitApp();
-			
-			localStorage.setItem("email", "");
-			localStorage.setItem("emailpass", "");
-			window.location.href = "Login.html";
-			alert(1)
-			if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-		 itms-apps://itunes.apple.com/app/id1146484648
-		    http://itunes.apple.com/app/id123456789
-		 }*/
-	}
 	
 	
 	$(document).on("tap", "#logout", function(e){
@@ -2087,12 +1540,10 @@ receivedEvent: function(id) {
 					  nomefoto = localStorage.getItem("nomefoto")+".jpg";
 				   }
 				   
-				  // &sono="+ document.getElementById("sono").value +"
-				  // alert(document.getElementById("sono").value)
 				   
 				   $.ajax({
 						  type:"GET",
-						  url:"http://msop.it/rides/check_impostazioni.php?id_autista="+ localStorage.getItem("id_autista") +"&veicolo="+ document.getElementById("veicolo").value +"&fumatori="+ fumatori +"&animali="+ animali +"&cell="+ document.getElementById("cell").value +"&patente="+ document.getElementById("patente").value +"&patentemese="+ document.getElementById("patentemese").value +"&patenteanno="+ document.getElementById("patenteanno").value +"&nome="+ document.getElementById("nome").value +"&cognome="+ document.getElementById("cognome").value +"&anno_nascita="+ document.getElementById("anno_nascita").value +"&foto="+ nomefoto +"&sono="+ document.getElementById("sono").value +"",
+						  url:"http://msop.it/rides/check_impostazioni.php?id_autista="+ localStorage.getItem("id_autista") +"&veicolo="+ document.getElementById("veicolo").value +"&fumatori="+ fumatori +"&animali="+ animali +"&cell="+ document.getElementById("cell").value +"&patente="+ document.getElementById("patente").value +"&patentemese="+ document.getElementById("patentemese").value +"&patenteanno="+ document.getElementById("patenteanno").value +"&nome="+ document.getElementById("nome").value +"&cognome="+ document.getElementById("cognome").value +"&anno_nascita="+ document.getElementById("anno_nascita").value +"&foto="+ nomefoto +"",
 						  contentType: "application/json",
 						  //data: {ID: "Lazio"}, LIMIT 10
 						  timeout: 7000,
@@ -2325,10 +1776,8 @@ function CenterControl(controlDiv, map) {
 	controlText.style.lineHeight = '30px';
 	controlText.style.paddingLeft = '5px';
 	controlText.style.paddingRight = '5px';
-	//controlText.innerHTML = '<table width="100%" border="0"><tr><td width="25%" align="center"><a id="mobilita" href="#"><img src="img/mobilita.png" width="60"></a></td><td width="25%" align="center"><a id="viaggi" href="#" rel="external"><img src="img/viaggi.png" width="60px"></a></td><td width="25%" align="center"><a id="food" href="#" rel="external"><img src="img/food.png" width="60px"></a></td><td width="25%" align="center"><a id="servizi" href="#" ><img src="img/servizi.png" width="60"></a></td></tr></table>';
+	controlText.innerHTML = '<br><table width="100%" border="0"><tr><td align="right" colspan="2"><a id="XXX" href="#" rel="external"><img src="img/xx.png" width="35px"></a></td></tr><tr><td align="center" width="25%"><a id="btnGPS" href="#" data-role="button" data-theme="b" class="custom-btnGPS"><font color="#fff"><b>GPS</b></font></a></td><td align="left" width="75%"><a id="Modifica" href="#" data-role="button" data-theme="b" class="custom-btn3"><font color="#fff"><b>Modifica<b></font></a></td></tr></table>';
 	controlUI.appendChild(controlText);
-	
-	//<br><table width="100%" border="0"><tr><td width="100%" align="center"><select id="scelta" data-theme="c"><option selected>Cosa Cerchi ?</option><option>Viaggi</option><option>Servizi</option><option>Food</option><option>Natale</option></select></td></tr><tr><td width="100%" align="center"><font size="5" color="#37b658"><b>Tova il servizio di sharing nella tua citta</b></font></td></tr></table>
 	
 	//<input id="viale" name="viale" type="text" value="'+ localStorage.getItem("Via") +'">
 	//var g = document.createElement('div');
@@ -2452,10 +1901,10 @@ function startgps(){
 	
 	var watchID1 = navigator.geolocation.getCurrentPosition(onSuccess55, onError55, {timeout: 10000, enableHighAccuracy: false, maximumAge: 0 });
 	
-	/*var lat = "41.770447";  //  "41.783780"  "41.783780" localStorage.getItem("lat")
-	var lng = "12.373529";  //  "12.364947"  "12.364947" localStorage.getItem("lng")
-	localStorage.setItem("lat", lat);
-	localStorage.setItem("lng", lng);*/
+	//var lat = "41.770447";  //  "41.783780"  "41.783780" localStorage.getItem("lat")
+	//var lng = "12.373529";  //  "12.364947"  "12.364947" localStorage.getItem("lng")
+	//localStorage.setItem("lat", lat);
+	//localStorage.setItem("lng", lng);
 	
 }
 
@@ -2912,46 +2361,27 @@ function verificawifi(){
 }
 
 function onResume() {
+	app.initialize();
 	
-	//alert("push")
+	/*var connectionStatus = false;
+	connectionStatus = navigator.onLine ? 'online' : 'offline';
 	
-	startgps();
+	if(connectionStatus=='online'){
 	
-	
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0, so always add + 1
-	
-	var ora = today.getHours()
-	if(ora<10){ora="0"+ora}
-	
-	var minuti = today.getMinutes();
-	if(minuti<10){minuti="0"+minuti}
-	
-	var secondi = today.getSeconds();
-	if(secondi<10){secondi="0"+secondi}
-	
-	
-	var yyyy = today.getFullYear();
-	if(dd<10){dd="0"+dd}
-	if(mm<10){mm="0"+mm}
-	today = dd+'/'+mm+'/'+yyyy;
-	
-	$("#stamp").html(yyyy+"-"+mm+"-"+dd+" "+ora+":"+minuti+":00");
-	var ora_cell = yyyy+"-"+mm+"-"+dd+" "+ora+":"+minuti+":00";
-	
-	localStorage.setItem("ora_cell", ora_cell);
-	
-	
-	$(".spinner").hide();
-	
-	localStorage.setItem("scroller","0");
-	localStorage.setItem("scroller22","0");
-	vediofferte44()
-	
-	$("#spinner44").show();
-	
+	setTimeout(function() {
+		
+		for(i=0; i<10000; i++)
+		{
+		window.clearInterval(i);
+		}
+			   
+	   resetta1(1);
+	}, 200);
+		
+	}
+	else{
 
+	}*/
 }
 
 function getDistance(lat1,lon1,lat2,lon2) {
@@ -3022,8 +2452,7 @@ function resetta1(focus) {
 	  center : latlng,
 	  mapTypeId : google.maps.MapTypeId.ROADMAP,
 	  scrollwheel	: false,
-	  //zoomControl: true,
-	  disableDefaultUI: true
+	  zoomControl: true
   
 	  };
 		
@@ -3077,6 +2506,7 @@ function resetta1(focus) {
 	
 	beaches.push(['Tua Posizione',lat,lng,1,0,0])
 	
+	//alert("http://purplemiles.com/www2/check_richiesta_autista.php?email="+ localStorage.getItem("email") +"&lat="+ localStorage.getItem("lat") +"&lng="+ localStorage.getItem("lng") +"&id_autista="+ localStorage.getItem("id_autista") +"");
 		
 		var myLatLng = new google.maps.LatLng(lat, lng, 1);
 		
@@ -3201,13 +2631,6 @@ function resetta1(focus) {
 			}
 			
 			//---------------------------
-		
-		
-		setTimeout (function(){
-		  $("#testomappa").fadeIn();
-		}, 1500);
-		
-		
 		
 	if(focus!=1){
 		var centerControlDiv = document.createElement('div');
@@ -4406,15 +3829,12 @@ function timer(){
 
 function vediofferte(){
 	
-	//var myScroll3;
+	//alert()
 	
-	//myScroll3 = new IScroll('#wrapper3', { click: true });
-	
-	
-	//for(i=0; i<10000; i++)
-	//{
-	 //window.clearInterval(i);
-	//}
+	for(i=0; i<10000; i++)
+	{
+	 window.clearInterval(i);
+	}
 	
 	
 	//alert("http://msop.it/rides/check_richiesta_autistaV4.php?email="+ localStorage.getItem("email") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"&id_autista="+ localStorage.getItem("id_autista") +"&fuso=154&ora_cell="+ localStorage.getItem("ora_cell") +"");
@@ -4429,36 +3849,22 @@ function vediofferte(){
 	 jsonp: 'callback',
 	 crossDomain: true,
 	 success:function(result){
-		   
-		if(localStorage.getItem("risppass444")==JSON.stringify(result)){
-		   localStorage.setItem("scroller222","1");
-
-		}
-		else{
 	 
-	 $("#offerte444").html("");
-		   
-	  localStorage.setItem("scroller222","0");
-
-	  /*myScroll4 = new IScroll('#wrapper4', {
-			click: true,
-			bounce: true
-	  });*/
-		   
-		   
+	 $("#offerte4").html("");
+	 $("#spinner2").hide();
+	 
 	 $.each(result, function(i,item){
 			
-	 localStorage.setItem("risppass444", JSON.stringify(result))
+	 //alert(item.Token)
 	 
 	 
 	 if(item.Token==1){
 			
 		if(item.stato==0){
-			var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-			var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+			var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
 			
 			
-			$("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo: </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Prezzo consigliato: </b>"+ Punita3 +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br></td></tr><tr><td align='center' colspan='2'>targa veicolo</td></tr><tr><td align='center' width='100%' colspan='2'><table align='center'><tr><td align='right' width='10%'><img src='img/targa.png' height='40px'></td><td align='left' width='90%'><input type='text' data-role='none' name='targa' id='targa' value='' placeholder='targa' class='scrivo'></td></tr></table></td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='elimina"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>CANCELLA</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
+			$("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo: </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Prezzo consigliato: </b>"+ Punita +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br></td></tr><tr><td align='center' colspan='2'>targa veicolo</td></tr><tr><td align='center' width='100%' colspan='2'><table align='center'><tr><td align='right' width='10%'><img src='img/targa.png' height='40px'></td><td align='left' width='90%'><input type='text' data-role='none' name='targa' id='targa' value='' placeholder='targa' class='scrivo'></td></tr></table></td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='elimina"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>CANCELLA</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
             
             
              $("#targa").focus(function() {
@@ -4552,23 +3958,21 @@ function vediofferte(){
 		}
 			
 		if(item.stato==1){
-			var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-			var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+			var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
 			
-			$("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo: </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Contributo: </b>"+ Punita3 +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>In Attesa di conferma</b></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
+			$("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo: </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Prezzo consigliato: </b>"+ Punita +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>In Attesa di conferma</b></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
 			}
 			
 			if(item.stato==2){
-			var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-			var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+			var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
 			
 			if(item.pagata=="No"){
 			
-			  $("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Contributo: </b>"+ Punita3 +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>In Attesa di conferma</b></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
+			  $("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Prezzo consigliato: </b>"+ Punita +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>In Attesa di conferma</b></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
 			}
 			else{
 			
-			 $("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Contributo: </b>"+ Punita3 +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>CONFERMATA</b></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' ><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> <a id='rifiuta"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
+			 $("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_pass +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_pass +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"<br><br>&nbsp;&nbsp;<b>Distanza </b>"+ item.distanza1 +" km<br><br>&nbsp;&nbsp;<b>Prezzo consigliato: </b>"+ Punita +" Euro</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><b>CONFERMATA</b></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' ><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> <a id='rifiuta"+ item.id_richiesta +"_"+ item.id_pass +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
 			 }
 			
 			//<font color='#fff'>CHIAMA PASSEGGERO</font>
@@ -4597,7 +4001,7 @@ function vediofferte(){
 			}
 			
 			if(item.stato==3){
-			//$("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' width='100%'>Nessuna richiesta al momento</td></tr></table>")
+			$("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' width='100%'>Nessuna richiesta al momento</td></tr></table>")
 			}
 			
 			if(parseInt(item.rating)==0){
@@ -4632,44 +4036,13 @@ function vediofferte(){
 	
 	 }
 	else{
-		$("#offerte444").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'>Nessuna richiesta al momento</td></tr></table><br><center>")
+		$("#offerte4").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'>Nessuna richiesta al momento</td></tr></table><br><center>")
 	}
 	 
 	 
 	 });
-		   
-		}
-		   
-		   
-	   
-		if(localStorage.getItem("scroller222")=="0"){
-		   /////////SCROLLER///////////////
-		   
-		   setTimeout(function() {
-					  
-					  myScroll4 = new IScroll('#wrapper4', { click: true });
-					  
-					  
-					  setTimeout (function(){
-							myScroll4.refresh();
-								  
-						}, 500);
-					  
-					  localStorage.setItem("scroller222","1")
-					  //document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 300); }, false);
-					  
-					  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-					  }, 500);
-		   
-		   ////////////////////////////////
-		   }
-		   else{
-		     setTimeout (function(){
-				//myScroll4.refresh();
-			 }, 1000);
-		   }
 	 
-		   
+	 
 	 },
 	 error: function(){
 	 
@@ -4764,7 +4137,7 @@ function vediofferte44(){
 				  
 				  
 				  if(item.accettata==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+				  var Punita = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
 				  
 				  if(item.pagata=="No"){
 				   var Credito = Number(item.credito).toFixed(2);
@@ -4772,13 +4145,13 @@ function vediofferte44(){
 				   
 					  if(Credito<Punita){
 				   
-				       $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br><b>Contributo: </b>"+ Punita +" Euro<br><br><a id='chat"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Paga con PayPal</font></a></td></tr><tr><td align='center' colspan='2'><br><img src='img/CC_Mastercard.jpg' width='50px'> <img src='img/CC_Visa.jpg' width='50px'> <img src='img/CC_PostePay.jpg' width='50px'> <img src='img/CC_VisaElectron.jpg' width='50px'></td></tr><tr><td align='center' colspan='2'><br><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr></table>");
+				       $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br><b>Costo del servizio: </b>"+ Punita +" Euro<br><br><a id='chat"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Paga con PayPal</font></a></td></tr><tr><td align='center' colspan='2'><br><img src='img/CC_Mastercard.jpg' width='50px'> <img src='img/CC_Visa.jpg' width='50px'> <img src='img/CC_PostePay.jpg' width='50px'> <img src='img/CC_VisaElectron.jpg' width='50px'></td></tr><tr><td align='center' colspan='2'><br><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr></table>");
 				        //<tr><td align='center'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr>
 				      }
 				      else{
 				   //localStorage.setItem("nuovocredito",Credito);
 				   
-				   $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo: </b>"+ Punita +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
+				   $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Rimborso cosigliato: </b>"+ Punita +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
 				   
 				   
 				   
@@ -4865,10 +4238,9 @@ function vediofferte44(){
 				  }
 				  else
 				  {
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				   var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+				  var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
 				  
-				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo autista: </b>"+ Punita3 +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
+				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Rimborso cosigliato: </b>"+ Punita +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
 				   
 				   
 				   //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
@@ -4952,9 +4324,9 @@ function vediofferte44(){
 				   }
 				   }
 				  else{
-				  $("#offerte44").append("<br><table width='90%' border='1' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Prezzo: </b>"+ item.importo +"<br><b>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>Fumatori:<b>"+ item.fumatori +"</b>&nbsp;Animali:<b>"+ item.animali +"</b></td></tr><tr><td align='center' colspan='2'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr></table>");
+				  $("#offerte44").append("<br><table width='90%' border='1' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><a id='linkpass' href=''class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Prezzo: </b>"+ item.importo +"<br><b>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>Fumatori:<b>"+ item.fumatori +"</b>&nbsp;Animali:<b>"+ item.animali +"</b></td></tr><tr><td align='center' colspan='2'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr></table>");
 				  
-				     //<a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;
+				  //<a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;
 				  }
 				  
 				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
@@ -5013,9 +4385,8 @@ function vediofferte44(){
 				  }
 				  
 				  if(item.stato==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+				  var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
+				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
 				   
 				  var Credito2 = Number(item.credito).toFixed(2);
 				  var Credito = (Number(item.credito).toFixed(2) - Punita2).toFixed(2);
@@ -5036,7 +4407,7 @@ function vediofferte44(){
 				  }
 				  
 				  
-				 $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo: </b>"+ Punita3 +" Euro<b><br><br>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"<br><br><b>Crediti Passeggero: </b>"+ Credito2 +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
+					 $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><a id='linkpass' href=''><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Costo del servizio: </b>"+ Punita2 +" Euro<b><br><br><b>Rimborso consigliato : </b>"+ Punita +"<br>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"<br><br><b>Crediti Passeggero: </b>"+ Credito2 +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
 				  
 				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
 								 accettaofferta(2,item.id_richiesta,item.id_autista)
@@ -5071,12 +4442,11 @@ function vediofferte44(){
 				  }
 				  
 				  if(item.stato==0){
-				   var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				   var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				   var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+				   var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
+				   var Punita2 = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
 
 				  if(item.nick==""){
-				    $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center'><b>RICHIESTA</b><br></td></tr><tr><td align='left'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo: </b>"+ Punita3 +" Euro<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center'></td></tr><tr><td align='center'><br></td></tr><tr><td align='center'><br><a id='elimina"+ item.id_richiesta +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
+				    $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center'><b>RICHIESTA</b><br></td></tr><tr><td align='left'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Costo del servizio: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;<b>Rimborso consigliato : </b>"+ Punita +"<br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center'></td></tr><tr><td align='center'><br></td></tr><tr><td align='center'><br><a id='elimina"+ item.id_richiesta +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
 				  
 				    $(document).on("touchstart", "#elimina"+ item.id_richiesta +"", function(e){
 								 elimina44(item.id_richiesta)
@@ -5087,9 +4457,8 @@ function vediofferte44(){
 				  }
 				  else{
 				   
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
+				  var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
+				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
 				  
 				  if(item.fumatori=="No"){
 				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
@@ -5105,7 +4474,7 @@ function vediofferte44(){
 				  var animali = "<img src='img/sidog.png' width='40px'>"
 				  }
 				  
-				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo: </b>"+ Punita3 +" Euro<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='elimina2"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
+				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella'><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Costo del servizio: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;<b>Rimborso consigliato : </b>"+ Punita +"<br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='elimina2"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
 				  }
 				  
 				  $(document).on("touchstart", "#elimina2"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
@@ -5142,12 +4511,7 @@ function vediofferte44(){
 				  }
 				  
 				  if(item.Token!=1){
-				  $("#offerte44").append("<br><br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff' size='5'> </font></td></tr></table>")
-				   
-				   //$("#imgutente").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-				   //$("#imgutente2").attr("src","http://www.msop.it/public/rides/"+localStorage.getItem("fotoprof")+"");
-				   //<br><a id='impostazioni' href='#'><img id='imgutente' src='img/default.png' class='utenteimg3'></a><br><br><br><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>
-				   //Nessun passaggio attivo
+				  $("#offerte44").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
 				  }
 				  
 				  });
@@ -5178,7 +4542,9 @@ function vediofferte44(){
 	if(localStorage.getItem("scroller")=="0"){
 		/////////SCROLLER///////////////
 
-
+	
+	 
+		
 		localStorage.setItem("scroller","1");
 		
 	}
@@ -5203,7 +4569,6 @@ function vediofferte44(){
 	refreshPos = setInterval(function() {
 		vediofferte44()
 	}, 7000);
-	
 	
 	
 }
@@ -5232,7 +4597,6 @@ function scriviRec(score,id_richiesta,id_autista){
 					  
 					  
                     $("#spinner44").hide();
-					  
 					accettaofferta(3,id_richiesta,id_autista)
 					  
 					  
@@ -5252,52 +4616,6 @@ function scriviRec(score,id_richiesta,id_autista){
 			   
 			   },
 			   dataType:"jsonp"});
-	
-}
-
-function scriviRec_passaggio(score,id_richiesta,id_autista){
-	
-	$("#spinner22").show();
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_ratingV2.asp",
-		   contentType: "application/json",
-		   data: {id_autista:id_autista,stelle:score},
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  navigator.notification.alert(
-											   'Grazie,recensione effettuata',  // message
-											   alertDismissed,         // callback
-											   'Attenzione',            // title
-											   'Ok'                  // buttonName
-											   );
-				  
-				  
-				  $("#spinner22").hide();
-				  
-				  accettaofferta_offerte_recensione(0,id_richiesta,id_autista)
-				  
-				  
-		  });
-		   
-		   
-		   },error: function(){
-		   
-		   $("#spinner44").hide();
-		   
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto',  // message
-										alertDismissed,         // callback
-										'Attenzione',            // title
-										'Done'                  // buttonName
-										);
-		   
-		   },
-		   dataType:"jsonp"});
 	
 }
 
@@ -5455,7 +4773,6 @@ function accettaofferta(id,id_richiesta,id_autista){
 	
 	//alert("http://purplemiles.com/www2/check_confermapasseggero.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"")
 	
-	
     $("#spinner44").show();
     
 	$("#spinner4").show();
@@ -5509,184 +4826,6 @@ function accettaofferta(id,id_richiesta,id_autista){
 		   },
 		   dataType:"jsonp"});
 }
-
-
-function accettaofferta_offerte(id,id_richiesta,id_autista){
-	
-	//alert("http://purplemiles.com/www2/check_confermapasseggero.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"")
-	//alert(localStorage.getItem("nuovocredito"))
-	
-	$("#spinner22").show();
-
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_confermapasseggero_offerte.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"&credito="+ localStorage.getItem("nuovocredito") +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  
-				  //alert(item.Token)
-				  
-				  if(item.Token==1){
-				  
-				    vedipassaggi()
-				  }
-				  
-				  
-				  if(item.Token==2){
-				  
-				   navigator.notification.alert(
-											   'Risulta una richiesta gia in elaborazione.',  // message
-											   alertDismissed,         // callback
-											   'Attenzione',           // title
-											   'OK'                  // buttonName
-											   );
-				  }
-				  
-				  });
-		   
-		   $("#spinner22").hide();
-		   
-		   },
-		   error: function(){
-		   
-		   $("#spinner22").hide();
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto.',  // message
-										alertDismissed,         // callback
-										'Attenzione',           // title
-										'Done'                  // buttonName
-										);
-		   
-		   
-		   vedipassaggi()
-		   
-		   },
-		   dataType:"jsonp"});
-}
-
-
-function accettaofferta_offerte_recensione(id,id_richiesta,id_autista){
-	
-	//alert("http://purplemiles.com/www2/check_confermapasseggero.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"")
-	//alert(localStorage.getItem("nuovocredito"))
-	
-	$("#spinner22").show();
-	
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_recensione_offerte.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"&credito="+ localStorage.getItem("nuovocredito") +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  
-				  //alert(item.Token)
-				  
-				  if(item.Token==1){
-				  
-				  vedipassaggi()
-				  }
-				  
-				  
-				  if(item.Token==2){
-				  
-				  navigator.notification.alert(
-											   'Risulta una richiesta gia in elaborazione.',  // message
-											   alertDismissed,         // callback
-											   'Attenzione',           // title
-											   'OK'                  // buttonName
-											   );
-				  }
-				  
-				  });
-		   
-		   $("#spinner22").hide();
-		   
-		   },
-		   error: function(){
-		   
-		   $("#spinner22").hide();
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto.',  // message
-										alertDismissed,         // callback
-										'Attenzione',           // title
-										'Done'                  // buttonName
-										);
-		   
-		   
-		   vedipassaggi()
-		   
-		   },
-		   dataType:"jsonp"});
-}
-
-
-function accettaofferta_offerte_stato0(id,id_richiesta,id_autista){
-	
-	//alert("http://purplemiles.com/www2/check_confermapasseggero.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"")
-	
-	$("#spinner22").show();
-	
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_confermapasseggero_offerte_stato0.php?conferma="+ id +"&id_richiesta="+ id_richiesta +"&id_autista="+ id_autista +"&credito="+ localStorage.getItem("nuovocredito") +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  
-				  if(item.Token==1){
-				  
-				  vedipassaggi()
-				  }
-				  
-				  if(item.Token==2){
-				  
-				  navigator.notification.alert(
-											   'Risulta una richiesta gia in elaborazione.',  // message
-											   alertDismissed,         // callback
-											   'Attenzione',           // title
-											   'OK'                  // buttonName
-											   );
-				  }
-				  
-				  });
-		   
-		   $("#spinner22").hide();
-		   
-		   },
-		   error: function(){
-		   
-		   $("#spinner22").hide();
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto.',  // message
-										alertDismissed,         // callback
-										'Attenzione',           // title
-										'Done'                  // buttonName
-										);
-		   
-		   
-		   vedipassaggi()
-		   
-		   },
-		   dataType:"jsonp"});
-}
-
-
 
 
 
@@ -7423,1308 +6562,6 @@ function chiudi22(id) {
 }
 
 
-$(document).on("tap", "#imgcalendario", function(e){
-	mostracal();
-	if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-});
-
-
-
-function mostracal(){
-	
-	var options = {
-		
-	date: new Date(),
-		
-	mode: 'date',
-		
-	doneButtonLabel: 'OK',
-	doneButtonColor: '#000000',
-	cancelButtonLabel: 'RESET',
-	cancelButtonColor: '#000000'
-		
-	};
-	
-	
-	datePicker.show(options, function(date){
-					var datta = String(date).substring(4, 15);
-					
-					var datta1 = datta.replace("Sep","Settembre")
-					var datta2 = datta1.replace("Oct","Ottobre")
-					var datta3 = datta2.replace("Nov","Novembre")
-					var datta4 = datta3.replace("Dec","Dicembre")
-					var datta5 = datta4.replace("Jan","Gennaio")
-					var datta6 = datta5.replace("Feb","Febbraio")
-					var datta7 = datta6.replace("Mar","Marzo")
-					var datta8 = datta7.replace("Apr","Aprile")
-					var datta9 = datta8.replace("May","Maggio")
-					var datta10 = datta9.replace("Jun","Giugno")
-					var datta11 = datta10.replace("Jul","Luglio")
-					var datta12 = datta11.replace("Aug","Agosto")
-					
-					//document.getElementById("datacal").value = datta12
-					
-					document.getElementById("datacal").value = datta
-					
-					});
-}
-
-
-$(document).on("touchstart", "#pinred", function(e){
-	var lat = localStorage.getItem("lat");
-	var lng = localStorage.getItem("lng");
-			   
-	codeLatLng22(lat,lng);
-			   
-	if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-});
-
-
-function codeLatLng22(lati,lngi) {
-	
-	
-	var geocoder;
-	geocoder = new google.maps.Geocoder();
-	//var input = "41.875094, 12.478151";
-	//var latlngStr = input.split(',', 2);
-	var lat = parseFloat(lati);
-	var lng = parseFloat(lngi);
-	
-	
-	var latlng = new google.maps.LatLng(lat, lng);
-	var indirizzo;
-	var Citta;
-	
-	geocoder.geocode({'latLng': latlng}, function(results, status) {
-					 if (status == google.maps.GeocoderStatus.OK) {
-					 
-					 
-					 if (results[0]) {
-					 
-					 var viadotto = results[0].formatted_address;
-					 
-					 var mySplitResult = viadotto.split(",");
-					 
-					 localStorage.setItem("Via", mySplitResult[0].replace(/[0-9]/g, '').replace('-', ''))
-					 
-					 indirizzo = results[0].formatted_address
-					 
-					 //self.document.formia.via.value = mySplitResult[0].replace(/[0-9]/g, '').replace('-', '');
-					 
-					 
-					 $(".spinner").hide();
-					 
-					 
-					 }
-					 
-					 } else {
-					 navigator.notification.alert(
-												  'Non riesco a rilevare la tua posizione',  // message
-												  alertDismissed,         // callback
-												  'Attenzione',            // title
-												  'OK'                  // buttonName
-												  );
-					 
-					 $(".spinner").hide();
-					 
-					 
-					 }
-					 
-					 if(results[1]){
-					 
-						var cittaa = results[1].formatted_address;
-						var mySplitResult1 = cittaa.split(",");
-					 
-						localStorage.setItem("Citta", mySplitResult1[1].replace(/[0-9]/g, ''))
-						
-						//self.document.formia.citta.value = mySplitResult1[1].replace(/[0-9]/g, '').trim();
-						
-						citta = mySplitResult1[1].replace(/[0-9]/g, '')
-					 
-						//return;
-						
-					 }
-					 
-					 
-					 document.getElementById("viale").value = indirizzo;
-					 
-					 //localStorage.setItem("viale", indirizzo)
-					 
-					 });
-	
-}
-
-$(document).on("touchstart", "#back_offerte", function(e){
-			   $("#spinnerins").show();
-			   
-			   if (document.getElementById("datacal").value == "") {
-			   navigator.notification.alert(
-											'inserire una data valida',  // message
-											alertDismissed,         // callback
-											'Data',            // title
-											'OK'                  // buttonName
-											);
-			   return;
-			   }
-			   
-			   if (document.getElementById("Orario").value == "--") {
-			   navigator.notification.alert(
-											'inserire un orario valido',  // message
-											alertDismissed,         // callback
-											'Data',            // title
-											'OK'                  // buttonName
-											);
-			   return;
-			   }
-			   
-			   if (document.getElementById("Minuti").value == "--") {
-			   navigator.notification.alert(
-											'inserire un orario valido',  // message
-											alertDismissed,         // callback
-											'Data',            // title
-											'OK'                  // buttonName
-											);
-			   return;
-			   }
-			   
-			   localStorage.setItem("viale", document.getElementById("viale").value);
-			   localStorage.setItem("destinazione", document.getElementById("destinazione").value);
-			   
-			   localStorage.setItem("datacal", document.getElementById("datacal").value);
-			   localStorage.setItem("orario", document.getElementById("Orario").value);
-			   localStorage.setItem("minuti", document.getElementById("Minuti").value);
-			   
-			   
-			   /*document.getElementById("viale7").value = document.getElementById("viale").value;
-			   document.getElementById("destinazione7").value = document.getElementById("destinazione").value;
-			   
-			   if (document.getElementById("viale7").value == "") {
-			   navigator.notification.alert(
-											'inserire un Indirizzo di partenza',  // message
-											alertDismissed,         // callback
-											'Attenzione',            // title
-											'OK'                  // buttonName
-											);
-			   
-			   return;
-			   }
-			   
-			   if (document.getElementById("destinazione7").value == "") {
-			   navigator.notification.alert(
-											'inserire un Indirizzo di destinazione',  // message
-											alertDismissed,         // callback
-											'Attenzione',            // title
-											'OK'                  // buttonName
-											);
-			   
-			   return;
-			   }*/
-			   
-			   
-			   var today = new Date();
-			   var dd = today.getDate();
-			   var mm = today.getMonth()+1;//January is 0, so always add + 1
-			   
-			   var ora = today.getHours()
-			   if(ora<10){ora="0"+ora}
-			   
-			   var minuti = today.getMinutes();
-			   if(minuti<10){minuti="0"+minuti}
-			   
-			   var secondi = today.getSeconds();
-			   if(secondi<10){secondi="0"+secondi}
-			   
-			   
-			   var yyyy = today.getFullYear();
-			   if(dd<10){dd="0"+dd}
-			   if(mm<10){mm="0"+mm}
-			   today = dd+'/'+mm+'/'+yyyy;
-			   
-			   
-			   var datona = yyyy+""+mm+""+dd;
-			   var orona = ora+""+minuti;
-			   
-			   var testo = document.getElementById("datacal").value;
-			   
-			   var testo1 = testo.replace('May', '05');
-			   var testo2 = testo1.replace('Jun', '06');
-			   var testo3 = testo2.replace('Jul', '07');
-			   var testo4 = testo3.replace('Aug', '08');
-			   var testo5 = testo4.replace('Sep', '09');
-			   var testo6 = testo5.replace('Oct', '10');
-			   var testo7 = testo6.replace('Nov', '11');
-			   var testo8 = testo7.replace('Dec', '12');
-			   var testo9 = testo8.replace('Jan', '01');
-			   var testo10 = testo9.replace('Feb', '02');
-			   var testo11 = testo10.replace('Mar', '03');
-			   var testo12 = testo11.replace('Apr', '04');
-			   
-			   var testo13 = testo12;
-			   
-			   var testo14 = testo12;
-			   
-			   
-			   var mese2 = testo12.substring(0, 2);
-			   var giorno2 = testo13.substring(6, 2);
-			   var anno2 = testo14.substring(10, 6);
-			   
-			   var datona2 = anno2+""+mese2+""+giorno2
-			   var orona2 = document.getElementById("Orario").value +""+ document.getElementById("Minuti").value;
-			   
-			   //alert(anno2)
-			   
-			   datona2 = datona2.replace(" ","")
-			   
-			   var cista;
-			   cista = 0;
-			   
-			   //alert(parseInt(datona2) +""+ parseInt(datona))
-			   
-			   if (parseInt(datona2)<parseInt(datona)) {
-			   navigator.notification.alert(
-											'inserire una data valida',  // message
-											alertDismissed,         // callback
-											'Data',            // title
-											'OK'                  // buttonName
-											);
-			   return;
-			   }
-			   
-			   
-			   
-			   $.ajax({
-					  type:"GET",
-					  
-					  url:"http://msop.it/rides/check_offerta_pos.php?email="+ localStorage.getItem("emailpass") +"&indirizzo="+document.getElementById("viale").value.replace("'","")+"&indirizzo2="+document.getElementById("destinazione").value.replace("'","")+"&data="+document.getElementById("datacal").value+"&ora="+document.getElementById("Orario").value+"&minuti="+document.getElementById("Minuti").value+"&fuso=154&passeggeri=01&animali=no&fumatori=no&meno18=no&disabili=no&bambini=no&wifi=no&portapacchi=no&rimorchio=no&bluetooth=no&note=domani modify&veicolo=Autovettura",
-					  
-					  contentType: "application/json",
-					  timeout: 7000,
-					  jsonp: 'callback',
-					  crossDomain: true,
-					  success:function(result){
-					  
-					  $.each(result, function(i,item){
-							 
-						if(item.Token==1){
-							 
-									navigator.notification.alert(
-														  'Richiesta Inviata',
-														  alertDismissed,
-														  'OK',
-														  'Ok'
-									);
-							 
-							 
-							 $("#spinnerins").hide();
-							 
-							 
-							 e.stopImmediatePropagation();
-							 
-							 e.preventDefault();
-							 
-							 return false;
-							 
-							 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-						}
-							 
-					  });
-					  
-					  
-					  },
-					  error: function(jqxhr,textStatus,errorThrown){
-					  $("#spinner2").hide();
-					  
-					  //alert(jqxhr);
-					  //alert(textStatus);
-					  //alert(errorThrown);
-					  
-					  navigator.notification.alert(
-												   'Possibile errore di rete, riprova tra qualche minuto.',
-												   alertDismissed,
-												   'Attenzione',
-												   'Done'
-												   );
-					  
-					  //onResume();
-					  
-					  },
-					  dataType:"jsonp"});
-			   
-			   });
-
-
-
-
-function vedipassaggi(){
-	
-	var myScroll4;
-
-	
-	
-	for(i=0; i<10000; i++)
-	{
-		window.clearInterval(i);
-	}
-	
-	
-	//alert("http://msop.it/rides/check_richiesta_passeggiV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"")
-	
-	
-	//$("#spinner22").show();
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_richiesta_passeggiV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   
-		   if(localStorage.getItem("risppass44")==JSON.stringify(result)){
-		     $.each(result, function(i,item){
-			   if(item.Token==3){
-				  //$("#inserisci").tap();
-			   }
-			  else{
-		        localStorage.setItem("scroller22","1");
-		        $("#spinner2").hide();
-		      }
-					
-			  });
-		   }
-		   else{
-		   $("#offerte22").html("");
-		   $("#spinner2").hide();
-		    localStorage.setItem("scroller22","0");
-		   
-		   myScroll4 = new IScroll('#wrapper4', {
-				click: true,
-				bounce: true
-		   });
-		   
-		   
-		   $.each(result, function(i,item){
-				  
-				  
-				  localStorage.setItem("risppass44", JSON.stringify(result))
-				  
-				  
-				  if(item.Token==1){
-				  
-				  
-				  if(item.stato==2){
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  
-				  if(item.accettata==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  
-				  if(item.pagata=="No"){
-				  var Credito = Number(item.credito).toFixed(2);
-				  
-				  //if(Credito<Punita){
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br><b>In attesa di conferma del passeggero</b></td></tr></table>");
-				  
-				  //<tr><td align='center'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr>
-				  //<tr><td align='center' colspan='2'><br><b>Contributo: </b>"+ Punita +" Euro<br><br><a id='chat"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Paga con PayPal</font></a></td></tr><tr><td align='center' colspan='2'><br><img src='img/CC_Mastercard.jpg' width='50px'> <img src='img/CC_Visa.jpg' width='50px'> <img src='img/CC_PostePay.jpg' width='50px'> <img src='img/CC_VisaElectron.jpg' width='50px'></td></tr>
-				  //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  //}
-				  
-				  
-				  
-				  // SONO ARRIVATO QUI A SE PAGATA per dare le valutazione e correggere il nickname passeggero e prendere il rating passeggero//
-				  
-				  
-				  
-				  }
-				  else
-				  {
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo autista: </b>"+ Punita3 +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
-				  
-				  
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr>
-				  //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
-				  
-				  $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
-								 
-								 var cordinate = item.lat+","+item.lng;
-								 
-								 window.open("maps:daddr="+ cordinate +"" , '_system');
-								 //window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#star1"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(1,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star2"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(2,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star3"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(3,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star4"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(4,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star5"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(5,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  }
-				  }
-				  else{
-				  $("#offerte22").append("<br><table width='90%' border='1' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Prezzo: </b>"+ item.importo +"<br><b>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>Fumatori:<b>"+ item.fumatori +"</b>&nbsp;Animali:<b>"+ item.animali +"</b></td></tr><tr><td align='center' colspan='2'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr></table>");
-				  
-				  //<a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;
-				  }
-				  
-				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta(2,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#chat"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 
-								 compraCarta(item.id_richiesta,item.id_autista,Punita)
-								 
-								 //accettaofferta(2,item.id_richiesta,item.id_autista)
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#rifiuta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta(3,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#telefona"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 
-					     window.location.href = "tel:+39"+item.cell+"";
-						 //window.open('tel:12345678', '_system')
-								 
-								 
-						if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				  });
-				  
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  
-				  }
-				  
-				  if(item.stato==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  var Credito2 = Number(item.credito).toFixed(2);
-				  var Credito = (Number(item.credito).toFixed(2) - Punita2).toFixed(2);
-				  
-				  if(Credito<0){
-				    Credito = 0;
-				  }
-				  
-				  localStorage.setItem("nuovocredito",Credito);
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo : </b>"+ Punita3 +"<br><br><b>Quando: </b>"+ item.quando +"&nbsp;<b>Ora: </b>"+ item.ora +"<br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"<br></td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
-				  
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr>
-				  //<br><b>Contributo: </b>"+ Punita2 +" Euro<b><br><br>
-				  //<tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  //<br><b>Crediti Passeggero: </b>"+ Credito2 +"
-				  
-				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-					accettaofferta_offerte(2,item.id_richiesta,item.id_autista)
-					if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				  });
-				  
-				  
-				  $(document).on("touchstart", "#rifiuta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-					accettaofferta_offerte_stato0(3,item.id_richiesta,item.id_autista)
-					if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				  });
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  }
-				  
-				  if(item.stato==0){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  if(item.nick==""){
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center'><b>OFFERTA</b><br></td></tr><tr><td align='left'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo : </b>"+ Punita3 +"<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center'></td></tr><tr><td align='center'><br></td></tr><tr><td align='center'><a id='elimina"+ item.id_richiesta +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
-				  
-				  //<b>Contributo: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;
-				  
-				  $(document).on("touchstart", "#elimina"+ item.id_richiesta +"", function(e){
-					elimina_offerta(item.id_richiesta)
-					if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				  });
-				  
-				  
-				  }
-				  else{
-				  
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.25).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.10).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo : </b>"+ Punita3 +"<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><a id='elimina2"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
-				  
-				  }
-				  
-				  //<b>Contributo: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;
-				  //<br>Auto:<b>"+ item.veicolo +"</b>
-				  //<tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  
-				  
-				  
-				  $(document).on("touchstart", "#elimina2"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
-								 accettaofferta_offerte_stato0(3,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  
-				  
-				  }
-				  
-				  
-				  }
-				  
-				  if(item.Token!=1){
-				  //$("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
-				  }
-				  
-				  });
-		   
-		   }
-		   
-		   //alert(localStorage.getItem("scroller22"))
-		   
-		   if(localStorage.getItem("scroller22")=="0"){
-		   /////////SCROLLER///////////////
-		   
-		    setTimeout(function() {
-					  
-					  myScroll4 = new IScroll('#wrapper4', { click: true });
-					  
-					  
-					  setTimeout (function(){
-						myScroll4.refresh();
-								  
-					   }, 500);
-					  
-					  
-					  localStorage.setItem("scroller22","1")
-					  //document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 300); }, false);
-					  
-					  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-			}, 500);
-		   
-		   ////////////////////////////////
-		   }
-		   else{
-		     setTimeout (function(){
-				//myScroll4.refresh();
-			}, 1000);
-		   }
-		   
-		   
-		  
-		   
-		   $("#spinner44").hide();
-		   
-		   },
-		   error: function(){
-		   
-		   $("#spinner22").hide();
-		   /*navigator.notification.alert(
-			'Possibile errore di rete, riprova tra qualche minuto.',  // message
-			alertDismissed,         // callback
-			'Attenzione',           // title
-			'Done'                  // buttonName
-			);*/
-		   
-		   vedipassaggi();
-		   
-		   },
-		   dataType:"jsonp"});
-
-	
-	
-	vediofferte()
-	
-	
-	refreshPos = setInterval(function() {
-		vedipassaggi()
-	}, 7000);
-	
-	
-}
-
-
-function vedipassaggi_pass(){
-	
-	var myScroll5;
-	
-	
-	
-	for(i=0; i<10000; i++)
-	{
-		window.clearInterval(i);
-	}
-	
-	
-	//alert("http://msop.it/rides/check_richiesta_passeggiV3.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"")
-	
-	
-	//$("#spinner44").show();
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_richiesta_passeggioV4.php?email="+ localStorage.getItem("emailpass") +"&id_passeggero="+ localStorage.getItem("id_pass") +"&latitudine="+ localStorage.getItem("lat") +"&longitudine="+ localStorage.getItem("lng") +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   
-		   if(localStorage.getItem("risppass44")==JSON.stringify(result)){
-		   localStorage.setItem("scroller22","1");
-		   $("#spinner22").hide();
-		   }
-		   else{
-		   $("#offerte22").html("");
-		   $("#spinner22").hide();
-		   localStorage.setItem("scroller22","0");
-		   
-		   myScroll4 = new IScroll('#wrapper4', {
-								   click: true,
-								   bounce: true
-								   });
-		   
-		   
-		   $.each(result, function(i,item){
-				  
-				  
-				  localStorage.setItem("risppass44", JSON.stringify(result))
-				  
-				  
-				  if(item.Token==1){
-				  
-				  
-				  if(item.stato==2){
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  
-				  if(item.accettata==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  
-				  if(item.pagata=="No"){
-				  var Credito = Number(item.credito).toFixed(2);
-				  
-				  //if(Credito<Punita){
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br><b>In attesa di conferma del passeggero</b></td></tr></table>");
-				  
-				  //<tr><td align='center'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr>
-				  //<tr><td align='center' colspan='2'><br><b>Contributo: </b>"+ Punita +" Euro<br><br><a id='chat"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Paga con PayPal</font></a></td></tr><tr><td align='center' colspan='2'><br><img src='img/CC_Mastercard.jpg' width='50px'> <img src='img/CC_Visa.jpg' width='50px'> <img src='img/CC_PostePay.jpg' width='50px'> <img src='img/CC_VisaElectron.jpg' width='50px'></td></tr>
-				  //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  //}
-				  
-				  
-				  
-				  // SONO ARRIVATO QUI A SE PAGATA per dare le valutazione e correggere il nickname passeggero e prendere il rating passeggero//
-				  
-				  
-				  
-				  }
-				  else
-				  {
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href='' class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo: </b>"+ Punita3 +" Euro<br><b>Quando: </b>"+ item.quando +",<b>Alle: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><br><a id='telefona"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' ><font color='#fff'><img src='img/call2.png' height='80'></a></td></tr><tr><td align='center' colspan='2'><br><a id='gps"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Percorso GPS</font></a> </td></tr><tr><td align='center' colspan='2'><br>Valuta il servizio e <font color='#FF0000'>cancella</font> la richiesta<br><img id='star1"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star2"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star3"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star4"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'> <img id='star5"+ item.id_richiesta +"_"+ item.id_autista + "' src='img/starunselected.png' width='45'></td></tr></table>");
-				  
-				  
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr><tr><td align='center' colspan='2'><br>Targa :<b>"+ item.targa +"</b></td></tr>
-				  //<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a>
-				  
-				  $(document).on("touchstart tap", "#gps"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
-								 
-								 var cordinate = item.lat+","+item.lng;
-								 
-								 window.open("maps:daddr="+ cordinate +"" , '_system');
-								 //window.open("google.navigation:q="+ item.partenza +"&mode=d" , '_system');
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#star1"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(1,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star2"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(2,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star3"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(3,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star4"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(4,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#star5"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 scriviRec_passaggio(5,item.id_richiesta,item.id_autista);
-								 
-								 e.stopImmediatePropagation();
-								 
-								 e.preventDefault();
-								 
-								 return false;
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  }
-				  }
-				  else{
-				  $("#offerte22").append("<br><table width='90%' border='1' valign='center' align='center' class='tabella'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''class='linkchat'><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><font color='#cc33cc' size='5'><b><div id='timer2'></div></b></font><br><b>Prezzo: </b>"+ item.importo +"<br><b>Quando: </b>"+ item.quando +"<br><b>Ora: </b>"+ item.ora +"<br><br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr><tr><td align='center' colspan='2'>Fumatori:<b>"+ item.fumatori +"</b>&nbsp;Animali:<b>"+ item.animali +"</b></td></tr><tr><td align='center' colspan='2'><a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr></table>");
-				  
-				  //<a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;
-				  }
-				  
-				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta(2,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  $(document).on("touchstart", "#chat"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 
-								 compraCarta(item.id_richiesta,item.id_autista,Punita2)
-								 
-								 //accettaofferta(2,item.id_richiesta,item.id_autista)
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#rifiuta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta(3,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#telefona"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 
-								 window.location.href = "tel:+39"+item.cell+"";
-								 //window.open('tel:12345678', '_system')
-								 
-								 
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  
-				  }
-				  
-				  if(item.stato==1){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  var Credito2 = Number(item.credito).toFixed(2);
-				  var Credito = (Number(item.credito).toFixed(2) - Punita2).toFixed(2);
-				  localStorage.setItem("nuovocredito",Credito);
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><a id='linkpass' href=''><font color='#000'>"+ item.nick +"</font></a></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br><b>Distanza: </b>"+ item.distanza1 +" km<br><b>Contributo : </b>"+ Punita3 +"<br><br><b>Quando: </b>"+ item.quando +"&nbsp;<b>Ora: </b>"+ item.ora +"<br><b>Partenza: </b>"+ item.partenza +"<br><b>Arrivo: </b>"+ item.arrivo +"<br></td></tr><tr><td align='center' colspan='2'><br><a id='accetta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>ACCETTA</font></a>&nbsp;&nbsp;<a id='rifiuta"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>RIFIUTA</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
-				  
-				  //<tr><td align='center' colspan='2'><br>Auto:<b>"+ item.veicolo +"</b></td></tr>
-				  //<br><b>Contributo: </b>"+ Punita2 +" Euro<b><br><br>
-				  //<tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  //<br><b>Crediti Passeggero: </b>"+ Credito2 +"
-				  
-				  $(document).on("touchstart", "#accetta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta_offerte(2,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  $(document).on("touchstart", "#rifiuta"+ item.id_richiesta +"_"+ item.id_autista + "", function(e){
-								 accettaofferta_offerte(3,item.id_richiesta,item.id_autista)
-								 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-								 });
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  }
-				  
-				  if(item.stato==0){
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  if(item.nick==""){
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center'><b>OFFERTA</b><br></td></tr><tr><td align='left'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo : </b>"+ Punita3 +"<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center'></td></tr><tr><td align='center'><br></td></tr><tr><td align='center'><a id='elimina"+ item.id_richiesta +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center'><br></td></tr></table>");
-				  
-				  //<b>Contributo: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;
-				  
-				  $(document).on("touchstart", "#elimina"+ item.id_richiesta +"", function(e){
-					elimina_offerta(item.id_richiesta)
-					if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-					});
-				  
-				  
-				  }
-				  else{
-				  
-				  var Punita = (Number(item.distanza1).toFixed(2) * 0.35).toFixed(2);
-				  var Punita2 = (Number(item.distanza1).toFixed(2) * 0.15).toFixed(2);
-				  var Punita3 = (Number(item.distanza1).toFixed(2) * 0.50).toFixed(2);
-				  
-				  if(item.fumatori=="No"){
-				  var fumatori = "<img src='img/nofumatori.png' width='40px'>"
-				  }
-				  else{
-				  var fumatori = "<img src='img/sifumatori.png' width='40px'>"
-				  }
-				  
-				  if(item.animali=="No"){
-				  var animali = "<img src='img/nodog.png' width='40px'>"
-				  }
-				  else{
-				  var animali = "<img src='img/sidog.png' width='40px'>"
-				  }
-				  
-				  
-				  $("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='tabella22'><tr><td align='center' colspan='2'><img src='http://www.msop.it/public/rides/"+item.foto+"' class='utenteimg'></td></tr><tr><td align='right' width='50%'><font color='#000'><div id='linkpass"+ item.id_richiesta +"_"+ item.id_autista +"'><b>"+ item.nick +"</b></div></font></td><td align='left' width='50%'><div id='stelleautista"+ item.id_richiesta +"_"+ item.id_autista +"'></div></td></tr><tr><td align='left' colspan='2'><br>&nbsp;&nbsp;<b>Distanza: </b>"+ item.distanza1 +" km<br>&nbsp;&nbsp;<b>Contributo : </b>"+ Punita3 +"<br><br>&nbsp;&nbsp;<b>Quando: </b>"+ item.quando +" <b>Ora: </b>"+ item.ora +"<br>&nbsp;&nbsp;<b>Partenza: </b>"+ item.partenza +"<br>&nbsp;&nbsp;<b>Arrivo </b>"+ item.arrivo +"</td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'></td></tr><tr><td align='center' colspan='2'><a id='elimina2"+ item.id_richiesta +"_"+ item.id_autista +"' href='#' data-role='button' data-theme='b' class='custom-btn4'><font color='#fff'>Cancella</font></a></td></tr><tr><td align='center' colspan='2'><br></td></tr></table>");
-				  
-				  }
-				  
-				  //<b>Contributo: </b>"+ Punita2 +" Euro<br><br>&nbsp;&nbsp;
-				  //<br>Auto:<b>"+ item.veicolo +"</b>
-				  //<tr><td align='center' colspan='2'>"+ fumatori +"&nbsp;"+ animali +"</td></tr>
-				  
-				  
-				  
-				  $(document).on("touchstart", "#elimina2"+ item.id_richiesta +"_"+ item.id_autista +"", function(e){
-					accettaofferta_offerte(3,item.id_richiesta,item.id_autista)
-					if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
-				  });
-				  
-				  
-				  if(parseInt(item.rating)==0){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if(parseInt(item.rating)==1){
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==2) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==3) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==4) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starunselected.png' width='18'>")
-				  }
-				  else if (parseInt(item.rating)==5) {
-				  $("#stelleautista"+ item.id_richiesta +"_"+ item.id_autista + "").html("<img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'><img src='img/starselected.png' width='18'>")
-				  }
-				  
-				  
-				  
-				  
-				  }
-				  
-				  
-				  }
-				  
-				  if(item.Token!=1){
-				  //$("#offerte22").append("<br><table width='90%' border='0' valign='center' align='center' class='#'><tr><td align='center' width='100%'><font color='#fff'> Nessun passaggio attivo</font></td></tr></table><br><div><img src='img/img.jpg' width='90%' id='contimg'></div>")
-				  }
-				  
-				  });
-		   
-		   }
-		   
-		   if(localStorage.getItem("scroller22")=="0"){
-		   /////////SCROLLER///////////////
-		   
-		   setTimeout(function() {
-					  
-					  myScroll5 = new IScroll('#wrapper5', { click: true });
-					  
-					  
-					  setTimeout (function(){
-								  myScroll5.refresh();
-								  
-					  }, 500);
-					  
-					  
-					  localStorage.setItem("scroller22","1")
-					  //document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 300); }, false);
-					  
-					  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-					  }, 500);
-		   
-		   ////////////////////////////////
-		   }
-		   else{
-		   setTimeout (function(){
-				myScroll5.refresh();
-			}, 1000);
-		   }
-		   
-		   
-		   
-		   
-		   $("#spinner44").hide();
-		   
-		   },
-		   error: function(){
-		   
-		   $("#spinner22").hide();
-		   /*navigator.notification.alert(
-			'Possibile errore di rete, riprova tra qualche minuto.',  // message
-			alertDismissed,         // callback
-			'Attenzione',           // title
-			'Done'                  // buttonName
-			);*/
-		   
-		   vedipassaggi_pass();
-		   
-		   },
-		   dataType:"jsonp"});
-	
-	
-	
-	
-	refreshPos = setInterval(function() {
-							 vedipassaggi_pass()
-							 }, 7000);
-	
-	
-}
-
-
-
-function elimina_offerta(id_richiesta){
-	
-	
-	$("#spinner4").show();
-	$.ajax({
-		   type:"GET",
-		   url:"http://msop.it/rides/check_elimina_passaggio.php?id_richiesta="+ id_richiesta +"",
-		   contentType: "application/json",
-		   //data: {ID: "Lazio"}, LIMIT 10
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  
-				  if(item.Token==1){
-				  
-				  $("#spinner4").hide();
-				  vedipassaggi()
-				  }
-				  
-				  });
-		   
-		   },
-		   error: function(){
-		   
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto.',  // message
-										alertDismissed,         // callback
-										'Attenzione',           // title
-										'Done'                  // buttonName
-										);
-		   
-		   
-		   vedipassaggi()
-		   
-		   },
-		   dataType:"jsonp"});
-}
-
 
 function regToken() {
 	
@@ -8770,8 +6607,6 @@ function regToken() {
 			   dataType:"json"});
 	}
 }
-
-
 
 
 
