@@ -1887,7 +1887,7 @@ receivedEvent: function(id) {
 	function onConfirm3(button) {
 		if(button==1){    //If User selected No, then we just do nothing
 			
-			window.open('http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1146484648&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8', '_system', 'location=no');
+			window.open('https://play.google.com/store/apps/details?id=it.ridy.com&hl=it', '_system', 'location=no');
 			
 			return;
 		}

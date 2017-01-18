@@ -4,6 +4,84 @@ function onDeviceReady() {
 	//document.addEventListener("resume", onResume, false);
 	//$("body").bind('touchmove', function(e){e.preventDefault()})
 	
+	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+	
+	
+	
+	openFB.init({appId: '179758705799931'});
+	
+	// 179758705799931
+	
+	//  537161096479495
+	
+	
+	
+	function loginFacebook() {
+		
+		openFB.login(
+				function(response) {
+					 if(response.status === 'connected') {
+					   //alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
+					   getInfo()
+					 } else {
+					   //alert('Facebook login failed: ' + response.error);
+					    navigator.notification.alert(
+												  'Login Facebook fallita, riprova in seguito o fai login con Ridy',  // message
+												  alertDismissed,         // callback
+												  'Login Facebook',            // title
+												  'OK'                  // buttonName
+												  );
+					 }
+				}, {scope: 'email,public_profile,user_friends'});
+	}
+	
+	
+	
+	function getInfo() {
+		
+		openFB.api({
+				   path: '/me',
+				   success: function(data) {
+				   console.log(JSON.stringify(data));
+				   
+				   //alert(data.name);
+				   //alert(data.email);
+				   
+				   //alert('http://graph.facebook.com/' + data.id + '/picture?type=small');
+				   //document.getElementById("userPic").src = 'http://graph.facebook.com/' + data.id + '/picture?type=small';
+				   
+				   
+				   LoginFacebookVera(data.email,data.name)
+				   
+		},
+		
+		error: errorHandler});
+	}
+	
+	
+	
+	
+	function errorHandler(error) {
+		alert(error.message);
+	}
+	
+	
+	
+	function logout() {
+		openFB.logout(
+			function() {
+				localStorage.setItem("email", "");
+				localStorage.setItem("emailpass", "");
+				localStorage.setItem("patente", "");
+			},
+		
+		 errorHandler);
+		
+		
+		var ref = window.open('https://m.facebook.com/', '_blank', 'location=no');
+	}
+	
+	
 	localStorage.setItem("pagina","log")
 	
      document.addEventListener('backbutton', function(e) {
@@ -50,6 +128,37 @@ function onDeviceReady() {
 	}
 	
     IDPage = getParameterByName('id');
+	
+
+	$('#sono').on('change', function(){
+		var $this = $(this),
+		$value = $this.val();
+				  
+		//alert($value)
+					
+		if($value=="autista"){
+			//$("#tabellapatente").show();
+				  
+				  var myScroll2;
+				  
+				  myScroll2 = new IScroll('#wrapper2', { click: true });
+				  setTimeout (function(){
+							  myScroll2.refresh();
+							  }, 1000);
+		}
+		else{
+			$("#tabellapatente").hide();
+				  
+				  var myScroll2;
+				  
+				  myScroll2 = new IScroll('#wrapper2', { click: true });
+				  setTimeout (function(){
+							  myScroll2.refresh();
+							  }, 1000);
+		}
+					
+	});
+	
 	
 	
 	
@@ -306,6 +415,12 @@ function onDeviceReady() {
                    
     });
 	
+	$(document).on("tap", "#polici", function(e){
+		
+		var ref = window.open('http://www.msop.it/rides/policy.html', '_system', 'location=no');
+				   
+	});
+	
 	
 	$(document).on("tap", "#indietro8", function(e){
 				   window.location.href = "#page6";
@@ -390,6 +505,21 @@ function onDeviceReady() {
 		return false;
 				   
 		if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
+				   
+	});
+	
+	
+	$(document).on("tap", "#homepage", function(e){
+				   
+				   window.location.href = "index.html";
+				   
+				   e.stopImmediatePropagation();
+				   
+				   e.preventDefault();
+				   
+				   return false;
+				   
+				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				   
 	});
 	
@@ -514,6 +644,51 @@ function onDeviceReady() {
 		
 	});
 	
+	$(document).on("tap", "#logfacebook", function(e){
+				   
+		  loginFacebook()
+		
+				   
+	   	  e.stopImmediatePropagation();
+				   
+		  e.preventDefault();
+				   
+		 return false;
+				   
+		 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
+				   
+	});
+	
+	$(document).on("tap", "#infofacebook", function(e){
+				   
+		getInfo()
+				   
+				   
+	   	  e.stopImmediatePropagation();
+				   
+		  e.preventDefault();
+				   
+		  return false;
+				   
+		  if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
+				   
+	});
+	
+	
+	$(document).on("tap", "#logoutfacebook", function(e){
+				   
+		 logout()
+				   
+				   
+		 e.stopImmediatePropagation();
+				   
+		 e.preventDefault();
+				   
+		 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
+				   
+	});
+	
+	
 	$(document).on("tap", "#legenda", function(e){
 				   
 		var ref = window.open('http://www.purplemiles.com/www/legenda.php?lang='+ localStorage.getItem("lingua") +'', '_system', 'location=no');
@@ -602,7 +777,7 @@ function onDeviceReady() {
 			
 			document.getElementById("email").value = localStorage.getItem("email2")
 			
-			var watchID = navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 30000, enableHighAccuracy: true, maximumAge: 90000 });
+			//var watchID = navigator.geolocation.getCurrentPosition(gpsonSuccess, gpsonError, {timeout: 30000, enableHighAccuracy: true, maximumAge: 90000 });
 			
 		}
 		else{
@@ -893,6 +1068,7 @@ function LoginVera(email,pin){
 				  localStorage.setItem("fotoprof", item.foto);
                   
                   localStorage.setItem("patente", item.patente)
+				  localStorage.setItem("RegToken", "");
 				  
 				  localStorage.setItem("nomefoto", email.replace("@","").replace(".","").replace(".",""))
 				  
@@ -941,6 +1117,94 @@ function LoginVera(email,pin){
 }
 
 
+
+function LoginFacebookVera(email,nome){
+
+	var lat = localStorage.getItem("lat");
+	var lng = localStorage.getItem("lng");
+	
+	$(".spinner").show();
+	$.ajax({
+		   type:"GET",
+		   url:"http://msop.it/rides/check_facebook.php?email="+ email +"&nome="+ nome +"&lat="+ lat +"&lon="+ lng +"",
+		   contentType: "application/json",
+		   //data: {email:email,pin:pin},
+		   timeout: 7000,
+		   jsonp: 'callback',
+		   crossDomain: true,
+		   success:function(result){
+		   
+		   $.each(result, function(i,item){
+				  //alert(item.Token);
+				  
+				  if (item.Token == 1){
+				  localStorage.setItem("email", email);
+				  localStorage.setItem("email2", email);
+				  localStorage.setItem("emailpass", email);
+				  localStorage.setItem("id_autista", item.id_autista);
+				  localStorage.setItem("nick", item.nick);
+				  localStorage.setItem("id_pass", item.id_passeggero);
+				  localStorage.setItem("nickpass", item.nick);
+				  
+				  localStorage.setItem("stelleautista", item.voto_autista);
+				  localStorage.setItem("stellepass", item.voto_passeggero);
+				  localStorage.setItem("md5", item.md5);
+				  localStorage.setItem("perc_autista", item.perc_aut);
+				  localStorage.setItem("perc_pass", item.perc_pass);
+				  localStorage.setItem("id_utente", item.id_utente);
+				  localStorage.setItem("fotoprof", item.foto);
+				  
+				  localStorage.setItem("patente", item.patente)
+				  localStorage.setItem("RegToken", "");
+				  
+				  localStorage.setItem("nomefoto", email.replace("@","").replace(".","").replace(".",""))
+				  
+				  
+				  //alert(localStorage.getItem("nomefoto"))
+				  
+				  
+				  window.location.href = "index.html";
+				  
+				  }
+				  else{
+				  if (item.Token == 11){
+				  navigator.notification.alert(
+											   'Utente non verificato, attivati cliccando sul link dopo la registrazione',  // message
+											   alertDismissed,         // callback
+											   'Attenzione',            // title
+											   'Done'                  // buttonName@
+											   );
+				  }
+				  else{
+				  navigator.notification.alert(
+											   'Email e/o password non corretti',  // message
+											   alertDismissed,         // callback
+											   'Attenzione',            // title
+											   'Done'                  // buttonName@
+											   );
+				  }
+				  }
+				  });
+		   
+		   $(".spinner").hide();
+		   
+		   },
+		   error: function(){
+		   $(".spinner").hide();
+		   
+		   navigator.notification.alert(
+										'Possibile errore di rete, riprova tra qualche minuto',  // message
+										alertDismissed,         // callback
+										'Attenzione',            // title
+										'Done'                  // buttonName
+										);
+		   
+		   },
+		   dataType:"jsonp"});
+}
+
+
+
 function iscriviti(){
 	
 	var nome = self.document.formia.nome.value;
@@ -951,9 +1215,44 @@ function iscriviti(){
 	var pinreg = self.document.formia.pinreg.value;
 	var nomereg = self.document.formia.nick.value;
 	var cell = self.document.formia.cell.value;
-    var patente = self.document.formia.patente.value;
-    var patentemese = self.document.formia.patentemese.value;
-    var patenteanno = self.document.formia.patenteanno.value;
+    var patente = "AA" //self.document.formia.patente.value;
+    var patentemese = "01" //self.document.formia.patentemese.value;
+    var patenteanno = "1979" //self.document.formia.patenteanno.value;
+	var sono = self.document.formia.sono.value;
+	
+	
+	if (sono == "autista") {
+		
+		if (patente == "") {
+			navigator.notification.alert(
+										 'inserire N. di patente',  // message
+										 alertDismissed,         // callback
+										 'Email',            // title
+										 'OK'                  // buttonName
+										 );
+			return;
+		}
+		
+		if (patentemese == "Mese") {
+			navigator.notification.alert(
+										 'inserire mese di scadenza patente',  // message
+										 alertDismissed,         // callback
+										 'Email',            // title
+										 'OK'                  // buttonName
+										 );
+			return;
+		}
+		
+		if (patenteanno == "Anno") {
+			navigator.notification.alert(
+										 'inserire anno di scadenza patente',  // message
+										 alertDismissed,         // callback
+										 'Email',            // title
+										 'OK'                  // buttonName
+										 );
+			return;
+		}
+	}
 	
 	if (emailreg == "") {
 		navigator.notification.alert(
@@ -1039,7 +1338,7 @@ function iscriviti(){
 	$(".spinner").show();
 	$.ajax({
 		   type:"GET",
-		   url:"http://msop.it/rides/check_registrazione.php?email="+ emailreg +"&password="+ pinreg +"&nickname="+ nomereg +"&cell="+ cell +"&patente="+ patente +"&patentemese="+ patentemese +"&patenteanno="+ patenteanno +"&nome="+ nome +"&cognome="+ cognome +"&anno_nascita="+ anno_nascita +"",
+		   url:"http://msop.it/rides/check_registrazione.php?email="+ emailreg +"&password="+ pinreg +"&nickname="+ nomereg +"&cell="+ cell +"&patente="+ patente +"&patentemese="+ patentemese +"&patenteanno="+ patenteanno +"&nome="+ nome +"&cognome="+ cognome +"&anno_nascita="+ anno_nascita +"&sono="+ sono +"",
 		   contentType: "application/json",
 		   //data: {email:emailreg,nickname:nomereg,pin:pinreg},
 		   timeout: 7000,

@@ -22,6 +22,7 @@
 		
 		<script type="text/javascript" src="js/iscroll.js"></script>
 		
+		
 		<script type="text/javascript">
 			
 			var myScroll;
@@ -138,7 +139,7 @@
 			}
 		
 			.div1 {
-				background-color: #488354;
+				background-color: #37b658;
 				height: 52px;
 				border: none;
 				
@@ -148,7 +149,7 @@
 				background-color: #FFFFFF;
 			}
 		.div3 {
-			background-color: #488354;
+			background-color: #37b658;
 			border: none;
 			margin:0 auto;
 			height: 10px;
@@ -184,6 +185,9 @@
 			-webkit-border-radius: 8px; /* safari, chrome */
 		}
 		.custom-btn {
+			text-decoration: none;
+			text-shadow:0 0 0;
+			
 			width: 280px;
 		}
 		
@@ -351,7 +355,7 @@ a {text-decoration:none;}
 
 			<center>
 			<br>
-			<img src="img/rides.png" width="160px"><br>
+			<font size="7" class="fontsforweb_fontid_2802" color="#37b658">Ridy</font><br>
 
 
 			<table id="formreg" align="center" width="90%">
@@ -380,6 +384,27 @@ a {text-decoration:none;}
 				<tr>
 					<td colspan="2" align="center">
 						<a href="#" id="accedi" data-role="button" class="custom-btn" data-theme="b"><font color="#FFF" size="4">Accedi</font></a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<a href="#" id="logfacebook" name="logfacebook" data-role="button" class="custom-btn" data-theme="d"><font color="#FFF" size="4">Accedi con Facebook</font></a>
+					</td>
+				</tr>
+				<!--<tr>
+					<td colspan="2" align="center">
+						<a href="#" id="infofacebook" name="infofacebook" data-role="button" class="custom-btn" data-theme="b"><font color="#FFF" size="4">Info</font></a>
+					</td>
+				</tr>-->
+				<tr>
+					<td colspan="2" align="center">
+						<a id="logoutfacebook" name="logoutfacebook" href="#"><font size="1" color="red">Esci da Facebook</font></a>
+						<!--<a id="logoutfacebook" name="logoutfacebook" data-role="button" class="custom-btn" data-theme="b"><font color="#FFF" size="4">Esci</font></a>-->
 					</td>
 				</tr>
 				<tr>
@@ -416,6 +441,11 @@ a {text-decoration:none;}
 				</td>
 				<td width="40%" align="center">
 					<a href="#" id="pagi7" data-role="button" class="custom-btn3" data-theme="b"><font color="#FFF" size="4">Iscriviti</font></a>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<a href="#" id="homepage" data-role="button" class="custom-btn" data-theme="b"><font color="#FFF" size="4">Torna alla mappa</font></a>
 				</td>
 			</tr>
 			</table>
@@ -573,7 +603,7 @@ a {text-decoration:none;}
             
 			<br>
 			<center>
-			<img src="img/rides.png" width="160px"><br>
+			<font size="7" class="fontsforweb_fontid_2802" color="#37b658">Ridy</font><br>
 			<div class="spinner" id="spinner"></div>
 			<center>
 				
@@ -581,6 +611,14 @@ a {text-decoration:none;}
 					<tr>
 						<td width="320px" align="left">
 							<form name="formia" action="entra.asp" method="post">
+								
+								<b>Voglio registrarmi come</b><br>
+								
+								<select id="sono" name="sono" class="form-control">
+									<option value="passeggero" selected>Passeggero</option>
+									<option value="autista">Autista</option>
+								</select><br>
+								
 								Nome<br><input type="text" data-role="none" name="nome" id="nome" value="" placeholder="Nome" class="scrivo"><br>
 								Cognome<br><input type="text" data-role="none" name="cognome" id="cognome" value="" placeholder="Cognome" class="scrivo"><br>
 								Anno di nascita<br>
@@ -641,9 +679,10 @@ a {text-decoration:none;}
 								Password<br><input type="text" data-role="none" name="pinreg" id="pinreg" value="" placeholder="Password" class="scrivo"><br>
 								Nickname<br><input type="text" data-role="none" name="nick" id="nick" value="" placeholder="Nome" class="scrivo"><br>
 								Cellulare<br><input type="text" data-role="none" name="cell" id="cell" value="" placeholder="Cellulare" class="scrivo"><br><br>
-                                
-                                <b>Solo per chi vuole offrire passaggi</b><br><br>
-                                    
+									
+								
+								<br>
+								<table id="tabellapatente" style="display:none"><tr><td>
                                 Patente N.<br><input type="text" data-role="none" name="patente" id="patente" value="" placeholder="N. Patente" class="scrivo"><br>
                                 Scadenza<br>
                                 <select id="patentemese" data-theme="c">
@@ -662,7 +701,7 @@ a {text-decoration:none;}
                                     <option value="Dicembre">Dicembre</option>
                                 </select><br>
                                 <select id="patenteanno" data-theme="c">
-                                    <option value="0" selected>Anno</option>
+                                    <option value="Anno" selected>Anno</option>
                                     <option value="2016">2016</option>
 									<option value="2017">2017</option>
 									<option value="2018">2018</option>
@@ -673,7 +712,12 @@ a {text-decoration:none;}
 									<option value="2023">2023</option>
 									<option value="2024">2024</option>
 									<option value="2025">2025</option>
-                                </select><br><center>
+                                </select>
+								</td></tr></table>
+								
+								<br><center>
+									
+								<a href="#" id="polici"><font size="3">Leggi Termini e Condizioni</font></a><br>
 											
 								<a href="#" id="iscriviti" data-role="button" data-theme="b" class="custom-btn"><font color="#fff" size="4">Iscriviti</font></a></center>
 							</form>
@@ -738,6 +782,7 @@ a {text-decoration:none;}
 
 		
         <script type="text/javascript" src="cordova.js"></script>
+		<script src="openfb.js"></script>
         <script type="text/javascript" src="js/Login.js"></script>
 		
 		<script type='application/javascript' src='js/fastclick.js'></script>
