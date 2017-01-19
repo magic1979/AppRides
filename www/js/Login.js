@@ -11,8 +11,6 @@ function onDeviceReady() {
 	openFB.init({appId: '179758705799931'});
 	
 
-	
-	
 	function loginFacebook() {
 		
 		openFB.login(
@@ -81,27 +79,6 @@ function onDeviceReady() {
 	
 	localStorage.setItem("pagina","log")
 	
-     document.addEventListener('backbutton', function(e) {
-							   
-		if(localStorage.getItem("pagina")=="log"){
-							   
-	        navigator.notification.confirm(
-	       'Vuoi chiudere purple miles?',  // message
-	        onConfirm2,              // callback to invoke with index of button pressed
-	       'Spegni',            // title
-	       'Spegni,Annulla'      // buttonLabels
-	        );
-							   
-		}
-							   
-		if(localStorage.getItem("pagina")=="imp"){
-							   
-		  $("#conferma").tap();
-							   
-		}
-							   
-	 }, false);
-	
 	
 	
 	var IDPage;
@@ -123,6 +100,7 @@ function onDeviceReady() {
 	else if(localStorage.getItem("lingua")=="en"){
 		document.getElementById("lingua").value = "en"
 	}
+	
 	
     IDPage = getParameterByName('id');
 	
@@ -257,135 +235,7 @@ function onDeviceReady() {
 		
 	}
 
-	
-    $('#fuso').on('change', function(){
-        var $this = $(this),
-        $value = $this.val();
-                   
-        document.getElementById("fuso").value = $value;
-				  
-		//alert($value)
 
-                  var citta = "<option value=''>Scegli la Citta</option>";
-                  
-                  $(".spinner").show();
-                  $.ajax({
-                         type:"GET",
-                         url:"http://purplemiles.com/www2/check_prendicitta.php?nazione="+$value+"",
-                         contentType: "application/json",
-                         timeout: 7000,
-                         jsonp: 'callback',
-                         crossDomain: true,
-                         success:function(result){
-                         
-                         $.each(result, function(i,item){
-                                
-                                
-                                if (item.Token == 1){
-
-                                  citta = citta + "<option value='"+item.id+"'>"+ item.city +"</option>"
-								  //alert(item.city)
-
-                                }
-                                else{
-                                navigator.notification.alert(
-                                                             'Errore di rete',  // message
-                                                             alertDismissed,         // callback
-                                                             'Attenzione',            // title
-                                                             'Done'                  // buttonName@
-                                                             );
-                                }
-                        });
-                         
-                         $(".spinner").hide();
-						 
-
-						 //window.location.href = "#page8";
-						 
-						 $("#citta").html(citta);
-						 
-						 $("#citta").selectmenu("refresh");
-						 
-						 
-                         },
-                         error: function(){
-                         $(".spinner").hide();
-                         
-                         navigator.notification.alert(
-                                                      'Possibile errore di rete, riprova tra qualche minuto',  // message
-                                                      alertDismissed,         // callback
-                                                      'Attenzione',            // title
-                                                      'Done'                  // buttonName
-                                                      );
-                         
-                         },
-					dataType:"jsonp"});
-                  
-    });
-	
-	
-	$('#citta').on('change', function(){
-				  var $this = $(this),
-				  $value = $this.val();
-				  
-				  document.getElementById("citta").value = $value;
-				   
-				  $("#precitta").html("Fuso Orario: <b><font color='#cc33cc'>" + $value+"</font></b>");
-				   
-			      prendicittaid($value)
-				  
-				  
-		});
-	
-	function prendicittaid(id){
-		
-		var citta = "";
-		
-
-		$.ajax({
-			   type:"GET",
-			   url:"http://purplemiles.com/www2/check_prendicittaid.php?id="+ id +"",
-			   contentType: "application/json",
-			   timeout: 7000,
-			   jsonp: 'callback',
-			   crossDomain: true,
-			   success:function(result){
-			   
-			   $.each(result, function(i,item){
-					  
-					  if (item.Token == 1){
-
-					    $("#precitta").html("Fuso Orario: <b><font color='#cc33cc'>" +item.city+"</font></b>");
-					    localStorage.setItem("city", item.city);
-					  
-					  }
-					  else{
-					  
-					  
-					  }
-				});
-			   
-			   $(".spinner").hide();
-			   
-			   
-			   },
-			   error: function(){
-			   $(".spinner").hide();
-			   
-			   
-			     navigator.notification.alert(
-											'Possibile errore di rete, riprova tra qualche minuto',  // message
-											alertDismissed,         // callback
-											'Attenzione',            // title
-											'Done'                  // buttonName
-											);
-
-			   
-			   
-			   },
-			   dataType:"jsonp"});
-		
-	}
     
     $(document).on("tap", "#pagi7", function(e){
                    window.location.href = "#page7";
@@ -411,6 +261,8 @@ function onDeviceReady() {
                    if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
                    
     });
+	
+	
 	
 	$(document).on("tap", "#polici", function(e){
 		
@@ -455,12 +307,12 @@ function onDeviceReady() {
 				   });
 	
 	
+	
 	document.addEventListener('DOMContentLoaded', function() {
 		FastClick.attach(document.body);
 	}, false);
 	
 
-	
 	
 	$(document).on("tap", "#prova", function(e){
 				   if(localStorage.getItem("pagina")=="log"){
@@ -490,6 +342,7 @@ function onDeviceReady() {
 		if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				   
 	});
+	
 	
 	$(document).on("tap", "#accedi1", function(e){
 				   
@@ -612,6 +465,7 @@ function onDeviceReady() {
 	});
 
 	
+	
 	$(document).on("touchstart", "#accedi", function(e){
 		//window.location.href = "index.html";
 		login();
@@ -619,12 +473,14 @@ function onDeviceReady() {
 		
 	});
 	
+	
 	$(document).on("touchstart", "#iscriviti", function(e){
 				   //window.location.href = "index.html";
 				   iscriviti();
 				   if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				   
 				   });
+	
 	
 	$(document).on("tap", "#recuperopsw", function(e){
    
@@ -641,6 +497,7 @@ function onDeviceReady() {
 		
 	});
 	
+	
 	$(document).on("tap", "#logfacebook", function(e){
 				   
 		  loginFacebook()
@@ -655,6 +512,7 @@ function onDeviceReady() {
 		 if ($.browser.iphone || $.browser.ipad) $(this).trigger('click');
 				   
 	});
+	
 	
 	$(document).on("tap", "#infofacebook", function(e){
 				   
@@ -672,6 +530,7 @@ function onDeviceReady() {
 	});
 	
 	
+	
 	$(document).on("tap", "#logoutfacebook", function(e){
 				   
 		 logout()
@@ -686,11 +545,13 @@ function onDeviceReady() {
 	});
 	
 	
+	
 	$(document).on("tap", "#legenda", function(e){
 				   
 		var ref = window.open('http://www.purplemiles.com/www/legenda.php?lang='+ localStorage.getItem("lingua") +'', '_system', 'location=no');
 				   
 	});
+	
 	
 	$(document).on("tap", "#regsito", function(e){
 				   
@@ -706,6 +567,7 @@ function onDeviceReady() {
 				   
 	});
 	
+	
 	$(document).keydown(function (eventObj){
 		getKey(eventObj);
 	});
@@ -718,26 +580,10 @@ function onDeviceReady() {
 		
 	}
 	
-
-		document.addEventListener("showkeyboard", function(){ $("[data-role=footer]").hide();}, false);
-		document.addEventListener("hidekeyboard", function(){ $("[data-role=footer]").show();}, false);
-		
-		// Workaround for buggy header/footer fixed position when virtual keyboard is on/off
-		$('input, select')
-		.on('focus', function (e) {
-			$('header, footer').css('position', 'absolute');
-			})
-		.on('blur', function (e) {
-			$('header, footer').css('position', 'fixed');
-			//force page redraw to fix incorrectly positioned fixed elements
-			//setTimeout( function() {
-			//window.scrollTo( $.mobile.window.scrollLeft(), $.mobile.window.scrollTop() );
-			//		   }, 20 );
-			});
     
          setTimeout(function() {
            $(".spinner").hide();
-         }, 5000);
+         }, 2000);
 	
 	
 		var connectionStatus = false;
@@ -790,161 +636,6 @@ function onDeviceReady() {
 
 	
     }
-
-
-
-function prendimezzi(){
-	var mezzi = "<option value='Autovettura' selected>Autovettura</option>"
-	
-	$(".spinner").show();
-	$.ajax({
-		   type:"GET",
-		   url:"http://purplemiles.com/www2/check_prendimezzo.php",
-		   contentType: "application/json",
-		   //data: {email:email,pin:pin},
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				  //alert(item.Token);
-				  
-				  if (item.Token == 1){
-				     if(localStorage.getItem("veicolo")==item.veicolo){
-				       mezzi = "";
-				       mezzi = mezzi + "<option value='"+item.veicolo+"' selected>"+ item.veicolo +"</option>"
-					 }
-				     else{
-                        if (localStorage.getItem("veicolo") === null || localStorage.getItem("veicolo")=="null" || typeof(localStorage.getItem("veicolo")) == 'undefined' || localStorage.getItem("veicolo")==0 || localStorage.getItem("veicolo")=="") {
-                           if(item.veicolo=="Car"){
-                               mezzi = mezzi + "<option value='"+item.veicolo+"' selected>"+ item.veicolo +"</option>"
-                           }
-                           else{
-                              mezzi = mezzi + "<option value='"+item.veicolo+"'>"+ item.veicolo +"</option>"
-                           }
-                        }
-                        else{
-                            mezzi = mezzi + "<option value='"+item.veicolo+"'>"+ item.veicolo +"</option>"
-                        }
-                     }
-				         /*if(item.id_veicolo==6){
-				            mezzi = mezzi + "<option value='"+item.id_veicolo+"' selected>"+ item.veicolo +"</option>"
-				          }
-				          else{
-				            mezzi = mezzi + "<option value='"+item.id_veicolo+"'>"+ item.veicolo +"</option>"
-				          }*/
-				  
-				  }
-				  else{
-				  navigator.notification.alert(
-											   'Errore di rete',  // message
-											   alertDismissed,         // callback
-											   'Attenzione',            // title
-											   'Done'                  // buttonName@
-											   );
-				  }
-			});
-		   
-		   $("#veicolo").html(mezzi);
-		   
-		   $("#veicolo").selectmenu("refresh");
-		   
-		   $(".spinner").hide();
-		   
-		   },
-		   error: function(){
-		   $(".spinner").hide();
-		   
-		   navigator.notification.alert(
-										'Possibile errore di rete, riprova tra qualche minuto',  // message
-										alertDismissed,         // callback
-										'Attenzione',            // title
-										'Done'                  // buttonName
-										);
-		   
-		   },
-		   dataType:"jsonp"});
-	
-}
-
-function prendinazione(){
-    
-	var nazione = "";
-    
-    $(".spinner").show();
-     $.ajax({
-		   type:"GET",
-		   url:"http://purplemiles.com/www2/check_prendinazione.php",
-		   contentType: "application/json",
-		   timeout: 7000,
-		   jsonp: 'callback',
-		   crossDomain: true,
-		   success:function(result){
-		   
-		   $.each(result, function(i,item){
-				 
-     
-     if (item.Token == 1){
-       if(localStorage.getItem("fuso")==item.country){
-			nazione = nazione + "<option value='"+item.country+"' selected>"+ item.country +"</option>"
-				  
-				  /*if(localStorage.getItem("citta")==item.id){
-				    $("#citta").html("<option value="+ localStorage.getItem("citta") +">"+ localStorage.getItem("citta") +"</option>");
-				  
-				    $("#citta").selectmenu("refresh");
-				  }*/
-				  
-       }
-       else{
-          if (localStorage.getItem("fuso") === null || localStorage.getItem("fuso")=="null" || typeof(localStorage.getItem("fuso")) == 'undefined' || localStorage.getItem("fuso")==0 || localStorage.getItem("fuso")=="") {
-                  if(item.country=="Italy"){
-                    nazione = nazione + "<option value='"+item.country+"' selected>"+ item.country +"</option>"
-                  }
-                  else{
-                    nazione = nazione + "<option value='"+item.country+"'>"+ item.country +"</option>"
-                  }
-
-           }
-           else{
-               nazione = nazione + "<option value='"+item.country+"'>"+ item.country +"</option>"
-
-            }
-       }
-     }
-     else{
-     navigator.notification.alert(
-     'Errore di rete',  // message
-     alertDismissed,         // callback
-     'Attenzione',            // title
-     'Done'                  // buttonName@
-     );
-     }
-     });
-		   
-     $(".spinner").hide();
-     
-     $("#fuso").html(nazione);
-     
-     $("#fuso").selectmenu("refresh");
-			
-	 
-    //document.getElementById("citta").value = localStorage.getItem("citta");
-		   
-    },
-    error: function(){
-    $(".spinner").hide();
-		   
-		   navigator.notification.alert(
-     'Possibile errore di rete, riprova tra qualche minuto',  // message
-     alertDismissed,         // callback
-     'Attenzione',            // title
-     'Done'                  // buttonName
-     );
-		   
-		   },
-		   dataType:"jsonp"});
-}
 
 
 
@@ -1436,7 +1127,6 @@ function gpsonError(){
 								 );
 	
 }
-
 
 
 
