@@ -10,10 +10,7 @@ function onDeviceReady() {
 	
 	openFB.init({appId: '179758705799931'});
 	
-	// 179758705799931
-	
-	//  537161096479495
-	
+
 	
 	
 	function loginFacebook() {
