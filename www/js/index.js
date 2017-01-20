@@ -22,6 +22,13 @@ receivedEvent: function(id) {
     document.addEventListener("resume", onResume, false);
 	
 	
+	if (localStorage.getItem("email") === null || localStorage.getItem("email")=="null" || typeof(localStorage.getItem("email")) == 'undefined' || localStorage.getItem("email")==0 || localStorage.getItem("email")=="") {
+				   
+		window.location.href = "Login.html";
+				   
+	}
+	
+	
 	window.plugins.insomnia.keepAwake();
 	
 	
@@ -94,7 +101,8 @@ receivedEvent: function(id) {
 	}
 	
 	
-	//////// PUSH NUOVE IOS //////
+	
+	///////// PUSH NUOVE ///////
 	
 	var pushNotification;
 	var token
@@ -108,7 +116,13 @@ receivedEvent: function(id) {
 		pushNotification.register(successHandler, errorHandler, {"senderID":"12250132047","ecb":"onNotification"});		// required!
 	} else {*/
 	
-	pushNotification.register(tokenHandler, errorHandler, {"badge":"true","sound":"true","alert":"true","ecb":"onNotificationAPN"});	// required!
+	pushNotification.register(
+    successHandler,
+    errorHandler,
+    {
+        "senderID":"930697186929",
+        "ecb":"onNotification"
+    });	// required!
 	//}
 	
 
@@ -131,13 +145,12 @@ receivedEvent: function(id) {
 		
 	}
 	
-	//pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, 0);
-	
 	
 	function successHandler (result) {
 		//$("#app-status-ul").append('<li>success:'+ result +'</li>');
 		
 		//alert('result = ' + result);
+		testa(result);
 	}
 	
 	function errorHandler (error) {
@@ -149,9 +162,6 @@ receivedEvent: function(id) {
 	function testa (testo) {
 		
 		
-		
-		if (localStorage.getItem("RegToken") === null || typeof(localStorage.getItem("RegToken")) == 'undefined' || localStorage.getItem("RegToken")=="null" || localStorage.getItem("RegToken")==""){
-		
 		setTimeout (function(){
 					
 		//alert("http://www.msop.it/rides/Check_RegToken.asp?email="+ localStorage.getItem("email") +"&token="+ testo +"&platform=ios")
@@ -160,7 +170,7 @@ receivedEvent: function(id) {
 		$.ajax({
 			   type:"GET",
 			   url:"http://www.msop.it/rides/Check_RegToken.asp",
-			   data: {email:localStorage.getItem("email"),token:testo,platform:"ios"},
+			   data: {email:localStorage.getItem("email"),token:testo,platform:"android"},
 			   contentType: "application/json",
 			   json: 'callback',
 			   timeout: 7000,
@@ -169,15 +179,17 @@ receivedEvent: function(id) {
 			   
 			   $.each(result, function(i,item){
 			   
-					localStorage.setItem("RegToken", "1");
+			     setTimeout (function(){
+					localStorage.setItem("Token", testo);
 					//alert(testo);
+				}, 500);
 			   
 			   });
 			   
 			   },
 			   error: function(){
 			   
-				  //alert("No")
+				 //alert("No")
 			   
 			   },
 			   dataType:"json"});
@@ -185,30 +197,72 @@ receivedEvent: function(id) {
 		}, 500);
 		
 		
-		}
 	}
-
 	
-	function onNotificationAPN (event) {
-		
-		
-		if ( event.alert )
-		{
-			navigator.notification.alert(event.alert);
-		}
-		
-		if ( event.sound )
-		{
-			var snd = new Media(event.sound);
-			snd.play();
-		}
-		
-		if ( event.badge )
-		{
-			pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, 0);
-			
-		}
-	}
+	
+	function onNotification(e) {
+    //$("#app-status-ul").append('<li>EVENT -> RECEIVED:' + e.event + '</li>');
+	
+
+    switch( e.event )
+    {
+    case 'registered':
+        if ( e.regid.length > 0 )
+        {
+            //$("#app-status-ul").append('<li>REGISTERED -> REGID:' + e.regid + "</li>");
+            // Your GCM push server needs to know the regID before it can push to this device
+            // here is where you might want to send it the regID for later use.
+            //console.log("regID = " + e.regid);
+			testa (e.regid)
+        }
+    break;
+
+    case 'message':
+        // if this flag is set, this notification happened while we were in the foreground.
+        // you might want to play a sound to get the user's attention, throw up a dialog, etc.
+        if ( e.foreground )
+        {
+            //$("#app-status-ul").append('<li>--INLINE NOTIFICATION--' + '</li>');
+
+            // on Android soundname is outside the payload.
+            // On Amazon FireOS all custom attributes are contained within payload
+            var soundfile = e.soundname || e.payload.sound;
+            // if the notification contains a soundname, play it.
+			playAudioA('successSound');
+        }
+        else
+        {  // otherwise we were launched because the user touched a notification in the notification tray.
+            if ( e.coldstart )
+            {
+                //$("#app-status-ul").append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+				playAudioA('successSound');
+            }
+            else
+            {
+                //$("#app-status-ul").append('<li>--BACKGROUND NOTIFICATION--' + '</li>');
+				playAudioA('successSound');
+            }
+        }
+
+       //$("#app-status-ul").append('<li>MESSAGE -> MSG: ' + e.payload.message + '</li>');
+           //Only works for GCM
+       //$("#app-status-ul").append('<li>MESSAGE -> MSGCNT: ' + e.payload.msgcnt + '</li>');
+       //Only works on Amazon Fire OS
+       //$status.append('<li>MESSAGE -> TIME: ' + e.payload.timeStamp + '</li>');
+	   
+		playAudioA('successSound');
+    break;
+
+    case 'error':
+        //$("#app-status-ul").append('<li>ERROR -> MSG:' + e.msg + '</li>');
+    break;
+
+    default:
+        //$("#app-status-ul").append('<li>EVENT -> Unknown, an event was received and we do not know what it is</li>');
+		playAudioA('successSound');
+    break;
+  }
+}
 	
 	
 	//pushNotification.setApplicationIconBadgeNumber(successCallback, errorCallback, 0);
